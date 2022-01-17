@@ -7,10 +7,21 @@
 #include "move.hh"
 #include "state.hh"
 
+#include <locale>
+#include <codecvt>
+
 
 int main() {
-  std::wcout << "Jeren homo-shakki :D\n";
-  std::wcout << "Welcome to play\n";
+
+  // Set locale to support GNU/Linux
+  std::ios_base::sync_with_stdio(false);
+  std::locale utf8(std::locale(), new std::codecvt_utf8_utf16<wchar_t>);
+  std::wcout.imbue(utf8);
+
+
+  std::wcout << "Jeren super-shakki :D\n";
+  std::wcout << L"Welcome to play\n";
+
 
   State state;
   UserInterface::Instance()->SetState(&state);

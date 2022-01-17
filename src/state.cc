@@ -4,6 +4,7 @@
 #include "pawn.hh"
 #include "tile.hh"
 
+
 Pawn* State::wk = new King(L"\u2654", 0, WK);
 Pawn* State::wq = new Queen(L"\u2655", 0, WQ);
 Pawn* State::wt = new Tower(L"\u2656", 0, WT);

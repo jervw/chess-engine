@@ -16,20 +16,12 @@ move.hh
 tile.hh
 /home/jervw/Programming/src/tile.hh
 
-/home/jervw/Programming/src/pawn.cc
-list
--
-string
--
-state.hh
-/home/jervw/Programming/src/state.hh
-pawn.hh
-/home/jervw/Programming/src/pawn.hh
-
 /home/jervw/Programming/src/pawn.hh
 list
 -
 string
+-
+map
 -
 state.hh
 /home/jervw/Programming/src/state.hh

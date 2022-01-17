@@ -2,11 +2,12 @@
 
 #include <list>
 #include <string>
+#include <map>
 #include "state.hh"
 #include "move.hh"
 
 // Vakioarvot nappulatyypeille.
-enum
+enum PawnTypes
 {
     WT, WH, WB, WQ, WK, WS,
     BT, BH, BB, BQ, BK, BS
