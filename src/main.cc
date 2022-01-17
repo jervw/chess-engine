@@ -5,7 +5,7 @@
 #include <list>
 #include "user_interface.hh"
 #include "move.hh"
-#include "state.hh"
+// #include "state.hh"
 
 #include <locale>
 #include <codecvt>

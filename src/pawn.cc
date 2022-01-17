@@ -9,6 +9,7 @@ Pawn::Pawn(std::wstring unicode, int color, int code)
     _unicode = unicode;
     _color = color;
     _code = code;
+
 }
 
 

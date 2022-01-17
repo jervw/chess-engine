@@ -1,3 +1,0 @@
-/home/jervw/Programming/build/CMakeFiles/rebuild_cache.dir
-/home/jervw/Programming/build/CMakeFiles/edit_cache.dir
-/home/jervw/Programming/build/CMakeFiles/chess.dir

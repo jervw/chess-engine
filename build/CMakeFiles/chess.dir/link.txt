@@ -1,1 +1,0 @@
-/usr/bin/x86_64-linux-gnu-g++-10 -g CMakeFiles/chess.dir/src/main.cc.o CMakeFiles/chess.dir/src/game.cc.o CMakeFiles/chess.dir/src/minmax.cc.o CMakeFiles/chess.dir/src/move.cc.o CMakeFiles/chess.dir/src/state.cc.o CMakeFiles/chess.dir/src/user_interface.cc.o CMakeFiles/chess.dir/src/pawn.cc.o CMakeFiles/chess.dir/src/tile.cc.o -o chess 
