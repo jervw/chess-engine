@@ -3,19 +3,20 @@
 
 Tile::Tile(int column, int row)
 {
-
+    _column = column;
+    _row = row;
 }
 
 
 int Tile::GetRow()
 {
-    return 0;
+    return _row;
 }
 
 
 int Tile::GetColumn()
 {
-    return 0;
+    return _column;
 }
 
 

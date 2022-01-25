@@ -11,7 +11,7 @@ public:
     void SetState(State* state) { this->_state = state; }
     void DrawBoard();
     Move GiveOpponentMove();
-    int AskOpponentColor();
+    int AskPlayerSide();
 
     static UserInterface* Instance();
 
@@ -21,4 +21,6 @@ private:
 
     UserInterface() {}
     UserInterface(State* state) { this->_state = state; }
+
+    int ReturnCharIndex(char&);
 };

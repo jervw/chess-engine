@@ -9,10 +9,10 @@ public:
     Move(Tile, Tile);
     Move() {}
     Move(bool, bool); // Linnoitus lyhesti (K-siipi) tai pitk�sti (D-siipi?
-    Tile getAlkuruutu();
-    Tile getLoppuruutu();
-    bool onkoLyhytLinna();
-    bool onkoPitk�linna();
+    Tile GetStartTile();
+    Tile GetEndTile();
+    bool IsShortCastle();
+    bool IsLongCastle();
     Nappula* _miksikorotetaan = 0;
 
 private:

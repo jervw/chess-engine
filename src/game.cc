@@ -4,8 +4,8 @@
 
 Game::Game(int humanColor)
 {
-
+    _humanColor = humanColor;
+    _engineColor = 1 - humanColor;
 }
 
 
-int Game::GetEngineColor() { return 0; }

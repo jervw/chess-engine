@@ -4,9 +4,11 @@
 class Game
 {
 public:
-    Game(int);
+    Game(int color);
+    int GetHumanColor();
     int GetEngineColor();
 
 private:
+    int _humanColor;
     int _engineColor; // Valkoinen = 0, Musta = 1
 };

@@ -5,19 +5,19 @@
 #include "tile.hh"
 
 
-Pawn* State::wk = new King(L"\u2654", 0, WK);
-Pawn* State::wq = new Queen(L"\u2655", 0, WQ);
-Pawn* State::wt = new Tower(L"\u2656", 0, WT);
-Pawn* State::wb = new Bishop(L"\u2657", 0, WB);
-Pawn* State::wh = new Knight(L"\u2658", 0, WH);
-Pawn* State::ws = new Soldier(L"\u2659", 0, WS);
+Pawn* State::wk = new King('K', WHITE, KING);
+Pawn* State::wq = new Queen('Q', WHITE, QUEEN);
+Pawn* State::wt = new Rook('R', WHITE, ROOK);
+Pawn* State::wb = new Bishop('B', WHITE, BISHOP);
+Pawn* State::wh = new Knight('N', WHITE, KNIGHT);
+Pawn* State::ws = new Soldier('P', WHITE, PAWN);
 
-Pawn* State::bk = new King(L"\u265A", 1, BK);
-Pawn* State::bq = new Queen(L"\u265B", 1, BQ);
-Pawn* State::bt = new Tower(L"\u265C", 1, BT);
-Pawn* State::bb = new Bishop(L"\u265D", 1, BB);
-Pawn* State::bh = new Knight(L"\u265E", 1, BH);
-Pawn* State::bs = new Soldier(L"\u265F", 1, BS);
+Pawn* State::bk = new King('K', 1, KING);
+Pawn* State::bq = new Queen('Q', 1, QUEEN);
+Pawn* State::bt = new Rook('R', 1, ROOK);
+Pawn* State::bb = new Bishop('B', 1, BISHOP);
+Pawn* State::bh = new Knight('N', 1, KNIGHT);
+Pawn* State::bs = new Soldier('P', 1, PAWN);
 
 
 State::State()
@@ -57,43 +57,67 @@ State::State()
 
 void State::UpdateState(Move* move)
 {
+    std::wcout << L"START\n";
+    std::wcout << move->GetStartTile().GetColumn() << "\n";
+    std::wcout << move->GetStartTile().GetRow() << "\n";;
+
+    std::wcout << L"END\n";
+    std::wcout << move->GetEndTile().GetColumn() << "\n";
+    std::wcout << move->GetEndTile().GetRow() << "\n";;
 
     // Kaksoisaskel-lippu on oletusarvoisesti pois p��lt�.
     // Asetetaan my�hemmin, jos tarvii.
 
 
     //Tarkastetaan on siirto lyhyt linna
+    if (move->GetStartTile().GetColumn() == move->GetEndTile().GetColumn() &&
+        move->GetStartTile().GetRow() == move->GetEndTile().GetRow()) {
+        std::wcout << L"Ei lyhyt linna\n";
+    }
 
-
-    // onko pitk� linna
+    // onko pitkä linna
+    if (move->GetStartTile().GetColumn() != move->GetEndTile().GetColumn() &&
+        move->GetStartTile().GetRow() != move->GetEndTile().GetRow()) {
+        std::wcout << L"Ei pitkä linna\n";
+    }
 
 
 
     // Kaikki muut siirrot
 
+    //Ottaa siirron alkuruudussa olleen nappulan talteen 
+    Pawn* startPawn = board[move->GetStartTile().GetRow()][move->GetStartTile().GetColumn()];
 
-        //Ottaa siirron alkuruudussa olleen nappulan talteen 
+    //Laittaa talteen otetun nappulan uuteen ruutuun
+    board[move->GetEndTile().GetRow()][move->GetEndTile().GetColumn()] = startPawn;
 
 
-        //Laittaa talteen otetun nappulan uuteen ruutuun
+    // Tarkistetaan oliko sotilaan kaksoisaskel
+    // (asetetaan kaksoisaskel-lippu)
+    if (move->GetStartTile().GetColumn() == move->GetEndTile().GetColumn() &&
+        move->GetStartTile().GetRow() == move->GetEndTile().GetRow()) {
+        std::wcout << L"Kaksoisaskel\n";
+    }
+
+    // Ohestaly�nti on tyhj��n ruutuun. Vieress� oleva (sotilas) poistetaan.
+    if (move->GetStartTile().GetColumn() != move->GetEndTile().GetColumn() &&
+        move->GetStartTile().GetRow() != move->GetEndTile().GetRow()) {
+        std::wcout << L"Ohestalyönti\n";
+    }
+
+    // Katsotaan jos nappula on sotilas ja rivi on p��tyrivi niin ei vaihdeta nappulaa 
+    //eli alkuruutuun laitetaan null ja loppuruudussa on jo kliittym�n laittama nappula MIIKKA, ei taida minmaxin kanssa hehkua?
 
 
-        // Tarkistetaan oliko sotilaan kaksoisaskel
-        // (asetetaan kaksoisaskel-lippu)
 
-        // Ohestaly�nti on tyhj��n ruutuun. Vieress� oleva (sotilas) poistetaan.
+    //
+    ////muissa tapauksissa alkuruutuun null ja loppuruutuun sama alkuruudusta l�htenyt nappula
 
-        //// Katsotaan jos nappula on sotilas ja rivi on p��tyrivi niin ei vaihdeta nappulaa 
-        ////eli alkuruutuun laitetaan null ja loppuruudussa on jo kliittym�n laittama nappula MIIKKA, ei taida minmaxin kanssa hehkua?
+    // katsotaan jos liikkunut nappula on kuningas niin muutetaan onkoKuningasLiikkunut arvo (molemmille v�reille)
 
-        //
-        ////muissa tapauksissa alkuruutuun null ja loppuruutuun sama alkuruudusta l�htenyt nappula
+    // katsotaan jos liikkunut nappula on torni niin muutetaan onkoTorniLiikkunut arvo (molemmille v�reille ja molemmille torneille)
 
-        // katsotaan jos liikkunut nappula on kuningas niin muutetaan onkoKuningasLiikkunut arvo (molemmille v�reille)
-
-        // katsotaan jos liikkunut nappula on torni niin muutetaan onkoTorniLiikkunut arvo (molemmille v�reille ja molemmille torneille)
-
-    //p�ivitet��n _siirtovuoro
+//p�ivitet��n _siirtovuoro
 
 }
 

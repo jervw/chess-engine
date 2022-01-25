@@ -4,16 +4,15 @@
 #include "pawn.hh"
 
 
-Pawn::Pawn(std::wstring unicode, int color, int code)
+Pawn::Pawn(char letter, int color, int code)
 {
-    _unicode = unicode;
+    _letter = letter;
     _color = color;
     _code = code;
-
 }
 
 
-void Tower::GetMoves(std::list<Move>& moveList, Tile* tile, State* state, int color)
+void Rook::GetMoves(std::list<Move>& moveList, Tile* tile, State* state, int color)
 {
 
 }

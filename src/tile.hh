@@ -1,6 +1,6 @@
 #pragma once
 
-// Shakkilaudan ruutu tietyss� (rivi, sarake) -koordinaatissa.
+// Shakkilaudan ruutu tietyssä (sarake, rivi ) -koordinaatissa.
 class Tile {
 public:
     Tile(int, int);

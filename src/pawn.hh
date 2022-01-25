@@ -9,29 +9,34 @@
 // Vakioarvot nappulatyypeille.
 enum PawnTypes
 {
-    WT, WH, WB, WQ, WK, WS,
-    BT, BH, BB, BQ, BK, BS
+    PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING,
 };
+
+enum Color
+{
+    WHITE, BLACK
+};
+
 
 // Yliluokka shakkinappuloille.
 class Pawn
 {
 
 private:
-    std::wstring	_unicode;
-    int				_color;		// valkea = 0, musta = 1
-    int				_code;		// VT, VR, MT tms.
+    char _letter;
+    int _color;		// valkea = 0, musta = 1
+    int _code;		// VT, VR, MT tms.
 
 public:
-    Pawn(std::wstring, int, int);
+    Pawn(char, int, int);
     Pawn() {}
 
     // Siirtojen generointi. Puhdas virtuaalifunktio, eli aliluokat toteuttavat t�m�n
     // omalla tavallaan.
     virtual void GetMoves(std::list<Move>& moveList, Tile*, State*, int color) = 0;
 
-    void SetUnicode(std::wstring unicode) { _unicode = unicode; }
-    std::wstring GetUnicode() { return _unicode; }
+    void SetUnicode(char letter) { _letter = letter; }
+    char GetLetter() { return _letter; }
     void SetColor(int color) { _color = color; }
     int GetColor() { return _color; }
     int GetCode() { return _code; }
@@ -40,16 +45,16 @@ public:
 
 // Torni-aliluokka. Virtuaalinen perint� tarkoittaa, ett� kantaluokka perit��n moniperinn�ss� vain kerran
 // (koska daami perii sek� tornin ett� l�hetin).
-class Tower : public virtual Pawn {
+class Rook : public virtual Pawn {
 public:
-    Tower(std::wstring unicode, int color, int code) : Pawn(unicode, color, code) {}
+    Rook(char letter, int color, int code) : Pawn(letter, color, code) {}
     void GetMoves(std::list<Move>& moveList, Tile*, State*, int color);
 };
 
 // Ratsu-aliluokka.
 class Knight : public Pawn {
 public:
-    Knight(std::wstring unicode, int color, int code) : Pawn(unicode, color, code) {}
+    Knight(char letter, int color, int code) : Pawn(letter, color, code) {}
     void GetMoves(std::list<Move>& moveList, Tile*, State*, int color);
 };
 
@@ -57,29 +62,29 @@ public:
 // (koska daami perii sek� tornin ett� l�hetin).
 class Bishop : public virtual Pawn {
 public:
-    Bishop(std::wstring unicode, int color, int code) : Pawn(unicode, color, code) {}
+    Bishop(char letter, int color, int code) : Pawn(letter, color, code) {}
     void GetMoves(std::list<Move>& moveList, Tile*, State*, int color);
 };
 
 // Daami-aliluokka. Perii sek� l�hetin ett� tornin.
-class Queen : public Bishop, public Tower {
+class Queen : public Bishop, public Rook {
 public:
-    Queen(std::wstring unicode, int color, int code) :
-        Pawn(unicode, color, code), Bishop(unicode, color, code), Tower(unicode, color, code) {}
+    Queen(char letter, int color, int code) :
+        Pawn(letter, color, code), Bishop(letter, color, code), Rook(letter, color, code) {}
     void GetMoves(std::list<Move>& moveList, Tile*, State*, int color);
 };
 
 // Kuningas-aliluokka.
 class King : public Pawn {
 public:
-    King(std::wstring unicode, int color, int code) : Pawn(unicode, color, code) {}
+    King(char letter, int color, int code) : Pawn(letter, color, code) {}
     void GetMoves(std::list<Move>& moveList, Tile*, State*, int color);
 };
 
 // Sotilas-aliluokka.
 class Soldier : public Pawn {
 public:
-    Soldier(std::wstring unicode, int color, int code) : Pawn(unicode, color, code) {}
+    Soldier(char letter, int color, int code) : Pawn(letter, color, code) {}
     void GetMoves(std::list<Move>& moveList, Tile*, State*, int color);
 private:
     void UpgradeSoldier(Move*, std::list<Move>& moveList, State*);
