@@ -3,17 +3,16 @@
 
 class Nappula;
 
-class Move
-{
+class Move {
 public:
     Move(Tile, Tile);
     Move() {}
-    Move(bool, bool); // Linnoitus lyhesti (K-siipi) tai pitk�sti (D-siipi?
-    Tile GetStartTile();
-    Tile GetEndTile();
+    Move(bool, bool);  // Linnoitus lyhesti (K-siipi) tai pitk�sti (D-siipi?
+    Tile Start();
+    Tile End();
     bool IsShortCastle();
     bool IsLongCastle();
-    Nappula* _miksikorotetaan = 0;
+    Nappula* _upgrade = 0;
 
 private:
     Tile _startTile;
