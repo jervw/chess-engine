@@ -12,13 +12,13 @@ Move::Move(bool _shortCastle, bool _longCastle)
 
 }
 
-Tile Move::GetStartTile()
+Tile Move::Start()
 {
     return _startTile;
 }
 
 
-Tile Move::GetEndTile()
+Tile Move::End()
 {
     return _endTile;
 }
@@ -26,11 +26,11 @@ Tile Move::GetEndTile()
 
 bool Move::IsShortCastle()
 {
-    return 0;
+    return _shortCastle;
 }
 
 
 bool Move::IsLongCastle()
 {
-    return 0;
+    return _longCastle;
 }

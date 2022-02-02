@@ -65,6 +65,7 @@ void State::UpdateState(Move* move) {
 
     // Tarkastetaan on siirto lyhyt linna
 
+    if(move.)
 
 
     // onko pitkä linna

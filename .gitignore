@@ -1,6 +1,6 @@
 .vscode/
 build/
-
+.ccls-cache/
 
 # Prerequisites
 *.d
