@@ -1,7 +1,6 @@
 #pragma once
 #include "state.hh"
 #include "pawn.hh"
-#include "game.hh"
 #include "move.hh" 
 
 
@@ -11,7 +10,7 @@ public:
     void SetState(State* state) { this->_state = state; }
     void DrawBoard();
     Move GiveOpponentMove();
-    int AskPlayerSide();
+    bool AskPlayerSide();
 
     static UserInterface* Instance();
 

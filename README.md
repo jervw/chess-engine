@@ -1,13 +1,13 @@
 # Chess engine
 #----Translated terms----
 #Kayttoliittyma = UserInterface
-#Siirto = Move
-#Ruutu = Tile
-#Asema = State
+#Move = Move
+#Tile = Tile
+#State = State
 #Lauta = Board
-#lista = moveList
+#moveList = moveList
 
-#vari = color
+#color = color
 #koodi = code
 
 #nappula = pawn

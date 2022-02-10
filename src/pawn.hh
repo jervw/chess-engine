@@ -31,7 +31,7 @@ public:
     Pawn(char, int, int);
     Pawn() {}
 
-    // Siirtojen generointi. Puhdas virtuaalifunktio, eli aliluokat toteuttavat t�m�n
+    // Movejen generointi. Puhdas virtuaalifunktio, eli aliluokat toteuttavat t�m�n
     // omalla tavallaan.
     virtual void GetMoves(std::list<Move>& moveList, Tile*, State*, int color) = 0;
 

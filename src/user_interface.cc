@@ -71,11 +71,11 @@ Move UserInterface::GiveOpponentMove() {
     return Move(startTile, endTile);
 }
 
-int UserInterface::AskPlayerSide() {
+bool UserInterface::AskPlayerSide() {
     std::wcout << L"\nChoose side [w/b]: ";
     char side;
     std::cin >> side;
-    return (side == 'w') ? WHITE : BLACK;
+    return (side == 'w');
 }
 
 int UserInterface::ReturnCharIndex(char& c) {

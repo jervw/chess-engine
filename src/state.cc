@@ -52,60 +52,108 @@ State::State() {
     board[6][7] = bh;
     board[7][7] = bt;
 }
-
+// Update board
 void State::UpdateState(Move* move) {
-
-    // Update board
-
-
-
 
     // Kaksoisaskel-lippu on oletusarvoisesti pois p��lt�.
     // Asetetaan my�hemmin, jos tarvii.
+    this->doublestepOnCol = -1;
 
-    // Tarkastetaan on siirto lyhyt linna
+    // Tarkastetaan on move lyhyt linna
 
-    if(move.)
+    if (move->IsShortCastle()) {
+        if (_turn == 0) {
+            board[4][0] = NULL;
+            board[6][0] = wk;
+            board[7][0] = NULL;
+            board[5][0] = wt;
+        }
+
+        if (_turn == 1) {
+            board[4][7] = NULL;
+            board[6][7] = bk;
+            board[7][7] = NULL;
+            board[5][7] = bt;
+        }
+    }
 
 
     // onko pitkä linna
+    else if (move->IsLongCastle()) {
+        if (_turn == 0) {
+            board[4][0] = NULL; // kuninkaan paikalle tyhjä
+            board[2][0] = wk; // kuningas uudelle paikalle
+            board[0][0] = NULL; // tornin paikalle tyhjä
+            board[3][0] = wt; // torni uudella paikalle
+        }
+        if (_turn == 1) {
+            board[4][7] = NULL; // kuninkaan paikalle tyhjä
+            board[2][7] = bk; // kuningas uudelle paikalle
+            board[0][7] = NULL; // tornin paikalle tyhjä
+            board[3][7] = bt; // torni uudella paikalle
+        }
+
+    }
 
     // Kaikki muut siirrot
+    else {
+        int startRow = move->Start().row;
+        int startCol = move->Start().column;
 
-    // Ottaa siirron alkuruudussa olleen nappulan talteen
-    Pawn* temp = board[move->Start().column][move->Start().row];
-
-    // Laittaa talteen otetun nappulan uuteen ruutuun
-    board[move->End().column][move->End().row] = temp;
-
-    // Tarkistetaan oliko sotilaan kaksoisaskel
-    // (asetetaan kaksoisaskel-lippu)
-
-    // Ohestaly�nti on tyhj��n ruutuun. Vieress� oleva (sotilas) poistetaan.
-
-    // Katsotaan jos nappula on sotilas ja rivi on p��tyrivi niin ei vaihdeta
-    // nappulaa
-    // eli alkuruutuun laitetaan null ja loppuruudussa on jo kliittym�n laittama
-    // nappula MIIKKA, ei taida minmaxin kanssa hehkua?
-
-    //
-    ////muissa tapauksissa alkuruutuun null ja loppuruutuun sama alkuruudusta
-    /// l�htenyt nappula
-
-    // katsotaan jos liikkunut nappula on kuningas niin muutetaan
-    // onkoKuningasLiikkunut arvo (molemmille v�reille)
-
-    // katsotaan jos liikkunut nappula on torni niin muutetaan
-    // onkoTorniLiikkunut arvo (molemmille v�reille ja molemmille torneille)
-
-    // p�ivitet��n _siirtovuoro
-
-    board[move->Start().column][move->Start().row] = NULL;
+        // Ottaa siirron alkuruudussa olleen nappulan talteen
+        Pawn* movingPawn = board[startCol][startRow];
 
 
+        int endRow = move->End().row;
+        int endCol = move->End().column;
+
+        // Tarkistetaan oliko sotilaan kaksoisaskel
+        if (board[startCol][startRow]->GetCode() == PAWN && (startRow - endRow) == 2 || startRow - endRow == -2)
+            doublestepOnCol = startCol;
+
+        // Ohestalynti on tyhjään tileun. Vieressä oleva (sotilas) poistetaan.
+        if (board[startCol][startRow]->GetCode() == PAWN && startRow != endRow && board[endCol][endRow] == NULL)
+            board[endCol][startRow] = NULL;
+
+
+        // Laittaa talteen otetun nappulan uuteen tileun
+        board[startCol][startRow] = NULL;
+        board[endCol][endRow] = movingPawn;
+
+        // katsotaan jos liikkunut nappula on kuningas niin muutetaan onkoKuningasLiikkunut arvo (molemmille v�reille)
+        if (movingPawn->GetCode() == KING) {
+
+            if (movingPawn->GetColor() == WHITE)
+                wKingMoved = true;
+            else
+                bKingMoved = true;
+        }
+
+        //Katsotaan onko liikkunut nappula torni ja muutetaan sen xRookMoved arvo
+        if (movingPawn->GetCode() == ROOK) {
+            if (movingPawn->GetColor() == WHITE) {
+                if (startCol == 7 && startRow == 0)
+                    wKRookMoved = true;
+                else
+                    wQRookMoved = true;
+            }
+            else {
+                if (startCol == 7 && startRow == 7)
+                    bKRookMoved = true;
+                else
+                    bQRookMoved = true;
+            }
+        }
+
+    }
+
+    if (_turn == WHITE)
+        _turn = BLACK;
+    else
+        _turn = WHITE;
 }
 
-int State::GetTurn() { return 0; }
+int State::GetTurn() { return _turn; }
 
 void State::GetTurn(int vuoro) {}
 
@@ -138,18 +186,18 @@ double State::Evaluate() {
     // 4. Arvosta linjoja
 }
 
-double State::CalculatePawnValues(int vari) { return 0; }
+double State::CalculatePawnValues(int color) { return 0; }
 
-bool State::IsOpeningOrMiddle(int vari) {
+bool State::IsOpeningOrMiddle(int color) {
     return 0;
     // Jos upseereita 3 tai v�hemm�n on loppupeli
     // mutta jos daami laudalla on loppueli vasta kun kuin vain daami j�ljell�
 
-    // Jos vari on 0 eli valkoiset
+    // Jos color on 0 eli valkoiset
     // niin on keskipeli jos mustalla upseereita yli 2 tai jos daami+1
 }
 
-double State::PawnsMiddle(int vari) {
+double State::PawnsMiddle(int color) {
     return 0;
 
     // sotilaat ydinkeskustassa + 0.25/napa
@@ -166,7 +214,7 @@ double State::PawnsMiddle(int vari) {
     // mustille laitakeskusta
 }
 
-double State::Lines(int vari) {
+double State::Lines(int color) {
     return 0;
 
     // valkoiset
@@ -175,8 +223,8 @@ double State::Lines(int vari) {
 }
 
 // https://chessprogramming.wikispaces.com/Minimax MinMax-algoritmin pseudokoodi
-// (lis�sin parametrina aseman)
-// int maxi(int depth, asema a)
+// (lis�sin parametrina staten)
+// int maxi(int depth, state a)
 //	if (depth == 0) return evaluate();
 //	int max = -oo;
 //	for (all moves ) {
@@ -187,7 +235,7 @@ double State::Lines(int vari) {
 //	return max;
 //}
 
-// int mini(int depth, asema a) {
+// int mini(int depth, state a) {
 //	if (depth == 0) return -evaluate();
 //	int min = +oo;
 //	for (all moves) {
@@ -200,13 +248,13 @@ double State::Lines(int vari) {
 MinMax State::GetMinMax(int syvyys) {
     MinMax value;
 
-    // Generoidaan aseman lailliset siirrot.
+    // Generoidaan staten lailliset siirrot.
 
     // Rekursion kantatapaus 1: peli on loppu
 
     // Rekursion kantatapaus 2: katkaisusyvyydess�
 
-    // Rekursioaskel: kokeillaan jokaista laillista siirtoa s
+    // Rekursioaskel: kokeillaan jokaista lailmoveList movea s
     // (alustetaan paluuarvo huonoimmaksi mahdolliseksi).
 
     return value;
@@ -224,6 +272,13 @@ MinMax State::Min(int syvyys) {
 
 bool State::TileAtRisk(Tile* tile, int opponentColor) { return false; }
 
-void State::WatchKingCheck(std::list<Move>& moveList, int color) {}
+void State::WatchTileKingCheck(std::list<Move>& moveList, int color) {}
 
-void State::GetLegalMoves(std::list<Move>& moveList) {}
+void State::GetLegalMoves(std::list<Move>& moveList) {
+    for (int i = 0; i < BOARD_SIZE; i++)
+        for (int j = 0; j < BOARD_SIZE; j++) {
+            //Ei kysele tyhjiltä ruuduilta nappulan nimeä
+            if (board[i][j] == NULL || board[i][j]->GetColor() != _turn) continue;
+            board[i][j]->GetMoves(moveList, &Tile(i, j), this, _turn); // myähäinen sidonta!
+        }
+}

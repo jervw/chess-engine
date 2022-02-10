@@ -9,6 +9,8 @@ Move::Move(Tile startTile, Tile endTile)
 
 Move::Move(bool _shortCastle, bool _longCastle)
 {
+    _shortCastle = _shortCastle;
+    _longCastle = _longCastle;
 
 }
 

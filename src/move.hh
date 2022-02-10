@@ -1,7 +1,7 @@
 #pragma once
 #include "tile.hh"
 
-class Nappula;
+class Pawn;
 
 class Move {
 public:
@@ -12,7 +12,13 @@ public:
     Tile End();
     bool IsShortCastle();
     bool IsLongCastle();
-    Nappula* _upgrade = 0;
+    Pawn* _upgrade = 0;
+
+    bool operator== (const Move& rhs)
+    {
+        return _startTile == rhs._startTile && _endTile == rhs._endTile &&
+            _shortCastle == rhs._shortCastle && _longCastle == rhs._longCastle;
+    }
 
 private:
     Tile _startTile;
