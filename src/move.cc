@@ -1,38 +1,46 @@
 #include "move.hh"
+#include <iostream>
 
-Move::Move(Tile startTile, Tile endTile)
-{
-    _startTile = startTile;
-    _endTile = endTile;
+Move::Move(Piece* mvPiece, Piece* attPiece, Piece* promPiece, int sRow, int sCol, int dRow, int dCol) {
+
+	movedPiece = mvPiece;
+	attackedPiece = attPiece;
+	promotedPiece = promPiece;
+	srcRow = sRow;
+	srcCol = sCol;
+	dstRow = dRow;
+	dstCol = dCol;
+	pieceHadMoved = movedPiece->getMoved();
 }
 
-
-Move::Move(bool _shortCastle, bool _longCastle)
-{
-    _shortCastle = _shortCastle;
-    _longCastle = _longCastle;
-
+Piece* Move::getMovedPiece() {
+	return movedPiece;
 }
 
-Tile Move::Start()
-{
-    return _startTile;
+Piece* Move::getAttackedPiece() {
+	return attackedPiece;
 }
 
-
-Tile Move::End()
-{
-    return _endTile;
+Piece* Move::getPromotedPiece() {
+	return promotedPiece;
 }
 
-
-bool Move::IsShortCastle()
-{
-    return _shortCastle;
+int Move::getSrcRow() {
+	return srcRow;
 }
 
+int Move::getSrcCol() {
+	return srcCol;
+}
 
-bool Move::IsLongCastle()
-{
-    return _longCastle;
+int Move::getDstRow() {
+	return dstRow;
+}
+
+int Move::getDstCol() {
+	return dstCol;
+}
+
+bool Move::getPieceHadMoved() {
+	return pieceHadMoved;
 }
