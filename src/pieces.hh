@@ -15,6 +15,7 @@ public:
     char getSymbol();
     int getRow();
     int getCol();
+    int getValue();
     bool getMoved();
     void setMoved(bool);
     void move(int, int);
@@ -26,9 +27,9 @@ public:
 
 protected:
     Board* board;
-
     char symbol;
     int row, col;
+    int value;
     Color player;
     bool moved;
 };

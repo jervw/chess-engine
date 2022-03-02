@@ -25,6 +25,10 @@ int Piece::getCol() {
 	return col;
 }
 
+int Piece::getValue() {
+	return value;
+}
+
 Color Piece::getPlayer() {
 	return player;
 }

@@ -2,6 +2,7 @@
 
 Rook::Rook(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
 	symbol = player == 1 ? 'R' : 'r';
+	value = 500;
 	board->addPiece(this);
 }
 

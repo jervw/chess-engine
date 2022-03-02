@@ -2,6 +2,7 @@
 #include <iostream>
 King::King(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
 	symbol = player == 1 ? 'K' : 'k';
+	value = 20000;
 	board->addPiece(this);
 }
 

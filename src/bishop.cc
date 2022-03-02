@@ -2,6 +2,7 @@
 
 Bishop::Bishop(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
 	symbol = (player == WHITE) ? 'B' : 'b';
+	value = 330;
 	board->addPiece(this);
 }
 

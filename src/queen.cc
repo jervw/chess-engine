@@ -2,6 +2,7 @@
 
 Queen::Queen(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
 	symbol = player == 1 ? 'Q' : 'q';
+	value = 900;
 	board->addPiece(this);
 }
 

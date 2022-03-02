@@ -11,6 +11,15 @@ public:
 
     bool play();
 
+    int mini(int depth);
+    int miniAlphaBeta(int depth, int alpha, int beta);
+
+    int maxi(int depth);
+    int maxiAlphaBeta(int depth, int alpha, int beta);
+
+    int evaluate();
+
+
 private:
     Board* board;
     Color engineColor;

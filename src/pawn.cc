@@ -2,6 +2,7 @@
 
 Pawn::Pawn(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
 	symbol = player == 1 ? 'P' : 'p';
+	value = 100;
 	board->addPiece(this);
 }
 

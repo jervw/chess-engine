@@ -2,6 +2,7 @@
 
 Knight::Knight(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
 	symbol = player == 1 ? 'N' : 'n';
+	value = 320;
 	board->addPiece(this);
 }
 
