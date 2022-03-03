@@ -26,6 +26,13 @@ int Piece::getCol() {
 	return col;
 }
 
+char Piece::colToChar() {
+	const std::string cols = "abcdefgh";
+	return cols[col - 1];
+}
+
+
+
 int Piece::getMatValue() {
 	return matValue;
 }
@@ -63,10 +70,10 @@ std::string Piece::pieceInfo() {
 	info += "Player: ";
 	info += (player == 1 ? "White " : "Black ");
 	info += "\nType: " + name + "\n";
-	info += "Col: " + std::to_string(col) + "\n";
-	info += "Row: " + std::to_string(row) + "\n";
 	info += "MatValue: " + std::to_string(matValue) + "\n";
 	info += "TileValue " + std::to_string(getTileValue(row, col)) + "\n";
 	info += "Moved: " + std::to_string(moved) + "\n";
+	info += "Tile: ";
+	info += colToChar() + std::to_string(row);
 	return info;
 }

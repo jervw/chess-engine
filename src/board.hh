@@ -13,7 +13,7 @@ public:
 	Board();
 	~Board();
 
-	std::vector<Piece*> getPieces(int player);
+	std::vector<Piece*> getPieces(int player = 0) const;
 	Piece* getPieceAt(int, int);
 
 	void addPiece(Piece*);
@@ -22,7 +22,7 @@ public:
 	bool isKingSafe(int);
 	void goBack();
 	void goForward();
-	void revertLastMove();
+	void undoMove();
 	void initBoard();
 	void printBoard(int, int, const std::vector<Tile>&);
 	void clear();
@@ -30,7 +30,7 @@ public:
 private:
 	Piece** pieces; // 64 pieces
 	Piece* wKing, * bKing; // save pointers to kings
-	std::vector<Move> preMoves; // previous moves
+	std::vector<Move> movesMade; // previous moves
 	int currentMove; // current move
 
 	bool isAttacked(int, int, int);

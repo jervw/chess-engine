@@ -17,6 +17,7 @@ public:
     char getSymbol();
     int getRow();
     int getCol();
+    char colToChar();
     int getMatValue();
     bool getMoved();
     void setMoved(bool);

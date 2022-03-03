@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class Tile {
 
@@ -9,6 +10,8 @@ public:
 
 	int getRow() const;
 	int getCol() const;
+	char colToChar() const;
+	std::string toString() const;
 
 private:
 	int row, col;

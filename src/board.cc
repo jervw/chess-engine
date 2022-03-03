@@ -16,7 +16,7 @@ Board::Board() {
 
 Board::~Board() {
 
-	while (currentMove < preMoves.size())
+	while (currentMove < movesMade.size())
 		goForward();
 
 	// deallocate current pieces
@@ -28,7 +28,7 @@ Board::~Board() {
 
 	// dellocate pieces which are not in the board
 	std::vector<Move>::iterator it;
-	for (it = preMoves.begin(); it != preMoves.end(); it++) {
+	for (it = movesMade.begin(); it != movesMade.end(); it++) {
 
 		// deallocate destroyed pieces.
 		if (it->getAttackedPiece() != NULL)
@@ -103,17 +103,14 @@ bool Board::movePiece(int srcRow, int srcCol, int dstRow, int dstCol) {
 	Piece* srcP = pieces[srcIndex];
 	Piece* dstP = pieces[dstIndex];
 
-	if (srcP != NULL) {
-
+	if (srcP) {
 		// check for pawn promotion
 		bool promoteMove = false;
 		if (dynamic_cast<Pawn*> (srcP)) {
-			if (dstRow == 8 && srcP->getPlayer() == 1) {
+			if (dstRow == 8 && srcP->getPlayer() == 1)
 				promoteMove = true;
-			}
-			else if (dstRow == 1 && srcP->getPlayer() == 2) {
+			else if (dstRow == 1 && srcP->getPlayer() == 2)
 				promoteMove = true;
-			}
 		}
 
 		// create the new queen if necessary.
@@ -123,7 +120,7 @@ bool Board::movePiece(int srcRow, int srcCol, int dstRow, int dstCol) {
 
 		// create the new move.
 		Move mData(srcP, dstP, q, srcRow, srcCol, dstRow, dstCol);
-		preMoves.push_back(mData);
+		movesMade.push_back(mData);
 
 		if (!q) {
 			srcP->move(dstRow, dstCol);
@@ -136,7 +133,7 @@ bool Board::movePiece(int srcRow, int srcCol, int dstRow, int dstCol) {
 
 		// revert if the king is not safe.
 		if (!isKingSafe(srcP->getPlayer())) {
-			revertLastMove();
+			undoMove();
 			return false;
 		}
 		return true;
@@ -145,9 +142,11 @@ bool Board::movePiece(int srcRow, int srcCol, int dstRow, int dstCol) {
 }
 
 
-void Board::revertLastMove() {
-	if (preMoves.size() > 0) {
-		Move move = preMoves[preMoves.size() - 1];
+
+
+void Board::undoMove() {
+	if (movesMade.size() > 0) {
+		Move move = movesMade[movesMade.size() - 1];
 
 		int srcIndex = convertToIndex(move.getSrcRow(), move.getSrcCol());
 		int dstIndex = convertToIndex(move.getDstRow(), move.getDstCol());
@@ -159,15 +158,14 @@ void Board::revertLastMove() {
 		pieces[dstIndex] = move.getAttackedPiece();
 
 		currentMove--;
-
-		preMoves.pop_back();
+		movesMade.pop_back();
 	}
 }
 
 // go back to view previous moves
 void Board::goBack() {
 	if (currentMove > 0) {
-		Move mData = preMoves[currentMove - 1];
+		Move mData = movesMade[currentMove - 1];
 
 		int srcIndex = convertToIndex(mData.getSrcRow(), mData.getSrcCol());
 		int dstIndex = convertToIndex(mData.getDstRow(), mData.getDstCol());
@@ -184,8 +182,8 @@ void Board::goBack() {
 
 // go forward to view previous moves
 void Board::goForward() {
-	if (currentMove < preMoves.size()) {
-		Move mData = preMoves[currentMove];
+	if (currentMove < movesMade.size()) {
+		Move mData = movesMade[currentMove];
 
 		int srcIndex = convertToIndex(mData.getSrcRow(), mData.getSrcCol());
 		int dstIndex = convertToIndex(mData.getDstRow(), mData.getDstCol());
@@ -244,7 +242,7 @@ bool Board::movesLeft(int player) {
 
 			// If the move was successful, revert it and return true.
 			if (success) {
-				revertLastMove();
+				undoMove();
 				return true;
 			}
 		}
@@ -258,11 +256,11 @@ int Board::convertToIndex(int row, int col) {
 }
 
 
-std::vector<Piece*> Board::getPieces(int player) {
+std::vector<Piece*> Board::getPieces(int player) const {
 	std::vector<Piece*> playerPieces;
 	for (int i = 0; i < 64; i++) {
 		Piece* p = pieces[i];
-		if (p != NULL && p->getPlayer() == player)
+		if (p != NULL && (p->getPlayer() == player || player == 0))
 			playerPieces.push_back(p);
 	}
 	return playerPieces;
@@ -346,5 +344,5 @@ void Board::printBoard(int selectedRow, int selectedCol, const std::vector<Tile>
 
 // clear the board, comment out for debugging.
 void Board::clear() {
-	std::cout << "\033c";
+	//std::cout << "\033c";
 }

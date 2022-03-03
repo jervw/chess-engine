@@ -7,24 +7,46 @@ Engine::Engine(Color color, Board* board) : board(board), engineColor(color) {}
 Engine::~Engine() = default;
 
 bool Engine::play() {
+
+    generateMoves();
+
+
+    // search best move 
+    int bestMove = 0;
+    double bestScore = -1;
+    for (int i = 0; i < moves.size(); i++) {
+        double score = search(0, -1, 1);
+        if (score > bestScore) {
+            bestScore = score;
+            bestMove = i;
+        }
+    }
+
+
+
+    // make best move
+    Piece* piece = moves[bestMove].first;
+    Tile tile = moves[bestMove].second;
+    board->movePiece(piece->getRow(), piece->getCol(), tile.getRow(), tile.getCol());
+
+
+
+    std::string s_move = "";
+    Game::Instance()->setMessage(s_move);
+    moves.clear();
+    return 1;
+}
+
+bool Engine::generateMoves() {
     std::vector<Piece*> pieces = board->getPieces(engineColor);
 
-    std::string pieceInfo = "";
     for (auto* piece : pieces) {
-        pieceInfo += piece->pieceInfo() + "\n";
         std::vector<Tile> possibleTiles = piece->getPossibleTiles(*board);
         for (auto tile : possibleTiles)
             moves.push_back(std::make_pair(piece, tile));
     }
 
-
-    // get best move
-
-
-
-
-    Game::Instance()->setMessage(pieceInfo);
-    return 1;
+    return moves.size() > 0;
 }
 
 double Engine::materialScore() {
@@ -40,71 +62,44 @@ double Engine::materialScore() {
 }
 
 
-double Engine::mini(int depth) {
-    if (depth == 0) return -evaluate();
-    int min = +1000000;
-    for (auto move : moves) {
-        int score = maxi(depth - 1);
-        if (score < min) min = score;
-    }
-    return min;
-}
-
-double Engine::maxi(int depth) {
-    if (depth == 0) return evaluate();
-    int max = -1000000;
-    for (auto move : moves) {
-        int score = mini(depth - 1);
-        if (score > max) max = score;
-    }
-    return max;
-}
-
 double Engine::evaluate() {
-    double score = materialScore();
+    double evaluation = materialScore();
 
     for (auto* piece : board->getPieces(engineColor)) {
         std::vector<Tile> possibleTiles = piece->getPossibleTiles(*board);
         for (auto tile : possibleTiles)
-            score += piece->getTileValue(tile.getCol(), tile.getRow());
-
+            evaluation += piece->getTileValue(tile.getCol(), tile.getRow());
     }
 
-    return score / 100;
+    return evaluation;
 }
+
+int Engine::search(int depth, int alpha, int beta) {
+    moves.clear();
+    if (depth == 0) return evaluate();
+
+    generateMoves();
+    if (moves.size() == 0) return 0; // stalemate or checkmate
+
+
+    for (auto move : moves) {
+        board->movePiece(move.first->getRow(), move.first->getCol(), move.second.getRow(), move.second.getCol());
+        int evaluation = -search(depth - 1, -beta, -alpha);
+        board->undoMove();
+        if (evaluation >= beta) return beta; // beta cut-off
+        alpha = std::max(alpha, evaluation);
+    }
+
+    return alpha;
+}
+
 
 std::string Engine::movesToString(const std::vector<std::pair<Piece*, Tile>>&moves) {
     std::string str;
     for (auto move : moves) {
-        str += Game::Instance()->columnToChar(move.first->getCol()) + std::to_string(move.first->getRow());
-        str += Game::Instance()->columnToChar(move.second.getCol()) + std::to_string(move.second.getRow());
+        str += move.first->colToChar() + std::to_string(move.first->getRow());
+        str += move.second.colToChar() + std::to_string(move.second.getRow());
     }
     return str;
 }
 
-
-
-// Alpha-Beta Prunning
-double Engine::miniAlphaBeta(int depth, int alpha, int beta) {
-    if (depth == 0) return -evaluate();
-    int min = +1000000;
-    for (auto move : moves) {
-        int score = maxiAlphaBeta(depth - 1, alpha, beta);
-        if (score < min) min = score;
-        if (min <= alpha) return alpha;
-        beta = std::min(beta, min);
-    }
-    return min;
-}
-
-double Engine::maxiAlphaBeta(int depth, int alpha, int beta) {
-    if (depth == 0) return evaluate();
-    int max = -1000000;
-    for (auto move : moves) {
-        int score = miniAlphaBeta(depth - 1, alpha, beta);
-        if (score > max) max = score;
-        if (max >= beta) return max;
-        if (max > alpha) alpha = max;
-    }
-    return max;
-}

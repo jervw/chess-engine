@@ -13,7 +13,6 @@ public:
 
 	void setMessage(std::string msg);
 	void startGame();
-	char columnToChar(int);
 	int getPlayerTurn();
 
 private:

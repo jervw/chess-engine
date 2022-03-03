@@ -17,3 +17,12 @@ int Tile::getRow() const {
 int Tile::getCol() const {
 	return col;
 }
+
+char Tile::colToChar() const {
+	const std::string cols = "abcdefgh";
+	return cols[col - 1];
+}
+
+std::string Tile::toString() const {
+	return colToChar() + std::to_string(row);
+}

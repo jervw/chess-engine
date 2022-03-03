@@ -12,15 +12,10 @@ public:
     ~Engine();
 
     bool play();
-
-    double mini(int depth);
-    double miniAlphaBeta(int depth, int alpha, int beta);
-
-    double maxi(int depth);
-    double maxiAlphaBeta(int depth, int alpha, int beta);
-
+    bool generateMoves();
 
     double evaluate();
+    int search(int depth, int alpha, int beta);
 
     double materialScore();
 

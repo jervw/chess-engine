@@ -15,6 +15,7 @@ Game::~Game() {
 	delete board;
 }
 
+
 Game* Game::instance = nullptr;
 
 Game* Game::Instance() {
@@ -39,18 +40,20 @@ void Game::startGame() {
 	int movesMade = 0;
 	int currentMovePosition = 0;
 
+	// main game loop
 	while (1) {
 		drawBoard(currentRow, currentCol, highlighted);
 		if (gameOver) break;
 
 		if (currentTurn == BLACK && engine->play()) {
+			movesMade++;
 			switchPlayer();
 			continue;
 		}
 
 		input[0] = getchar();
 
-		// CTRL-C
+		// EXIT (keys: CTRL+C, q, Q)
 		if (input[0] == 3 || input[0] == 'q' || input[0] == 'Q')
 			break;
 
@@ -76,7 +79,6 @@ void Game::startGame() {
 				highlighted.clear();
 
 				if (success) {
-
 					movesMade++;
 					currentMovePosition++;
 
@@ -120,10 +122,7 @@ void Game::startGame() {
 			}
 			continue;
 		}
-		else if (input[0] != 27) {
-			std::cout << "invalid input.\n";
-			continue;
-		}
+		else if (input[0] != 27) continue;  // ESC
 
 		input[1] = getchar();
 		input[2] = getchar();
@@ -139,7 +138,7 @@ void Game::startGame() {
 		}
 	}
 
-	// restore terminal
+	// restore terminal settings
 	system("stty echo");
 	system("stty cooked");
 }
@@ -175,16 +174,9 @@ void Game::drawBoard(int currentRow, int currentCol, std::vector<Tile>& highligh
 	message = "";
 
 	system("stty raw");
-
 }
 
 void Game::setMessage(std::string msg) {
 	message = msg;
 }
 
-/// HELPER FUNCTIONS (maybe move to board class?)
-
-char Game::columnToChar(int col) {
-	const char* cols = "abcdefgh";
-	return cols[col - 1];
-}
