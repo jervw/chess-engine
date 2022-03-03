@@ -15,63 +15,62 @@ bool Engine::play() {
         std::vector<Tile> possibleTiles = piece->getPossibleTiles(*board);
         for (auto tile : possibleTiles)
             moves.push_back(std::make_pair(piece, tile));
-
     }
+
+
+    // get best move
+
+
 
 
     Game::Instance()->setMessage(pieceInfo);
     return 1;
 }
 
+double Engine::materialScore() {
+    double whiteScore = 0;
+    double blackScore = 0;
+    for (auto* piece : board->getPieces(WHITE))
+        whiteScore += piece->getMatValue();
+
+    for (auto* piece : board->getPieces(BLACK))
+        blackScore += piece->getMatValue();
+
+    return (whiteScore - blackScore);
+}
 
 
-
-int Engine::miniAlphaBeta(int depth, int alpha, int beta) {
+double Engine::mini(int depth) {
     if (depth == 0) return -evaluate();
     int min = +1000000;
     for (auto move : moves) {
-        int score = maxiAlphaBeta(depth - 1, alpha, beta);
+        int score = maxi(depth - 1);
         if (score < min) min = score;
-        if (min <= alpha) return alpha;
-        beta = std::min(beta, min);
     }
     return min;
 }
 
-int Engine::maxiAlphaBeta(int depth, int alpha, int beta) {
+double Engine::maxi(int depth) {
     if (depth == 0) return evaluate();
     int max = -1000000;
     for (auto move : moves) {
-        int score = miniAlphaBeta(depth - 1, alpha, beta);
+        int score = mini(depth - 1);
         if (score > max) max = score;
-        if (max >= beta) return max;
-        if (max > alpha) alpha = max;
     }
     return max;
 }
 
+double Engine::evaluate() {
+    double score = materialScore();
 
+    for (auto* piece : board->getPieces(engineColor)) {
+        std::vector<Tile> possibleTiles = piece->getPossibleTiles(*board);
+        for (auto tile : possibleTiles)
+            score += piece->getTileValue(tile.getCol(), tile.getRow());
 
-int Engine::evaluate() {
-    int score = 0;
-    int blackPiecePoints = 0;
-    int whitePiecePoints = 0;
-    for (auto piece : board->getPieces(WHITE)) {
-        whitePiecePoints += piece->getMatValue();
-    }
-    for (auto piece : board->getPieces(BLACK)) {
-        blackPiecePoints += piece->getMatValue();
     }
 
-    score = whitePiecePoints - blackPiecePoints;
-
-    for (auto move : moves) {
-        Piece* piece = move.first;
-        Tile tile = move.second;
-        score += piece->getMatValue() * (tile.getRow() - piece->getRow());
-    }
-
-    return score;
+    return score / 100;
 }
 
 std::string Engine::movesToString(const std::vector<std::pair<Piece*, Tile>>&moves) {
@@ -85,24 +84,27 @@ std::string Engine::movesToString(const std::vector<std::pair<Piece*, Tile>>&mov
 
 
 
-// OLD MINIMAX
-
-int Engine::mini(int depth) {
+// Alpha-Beta Prunning
+double Engine::miniAlphaBeta(int depth, int alpha, int beta) {
     if (depth == 0) return -evaluate();
     int min = +1000000;
     for (auto move : moves) {
-        int score = maxi(depth - 1);
+        int score = maxiAlphaBeta(depth - 1, alpha, beta);
         if (score < min) min = score;
+        if (min <= alpha) return alpha;
+        beta = std::min(beta, min);
     }
     return min;
 }
 
-int Engine::maxi(int depth) {
+double Engine::maxiAlphaBeta(int depth, int alpha, int beta) {
     if (depth == 0) return evaluate();
     int max = -1000000;
     for (auto move : moves) {
-        int score = mini(depth - 1);
+        int score = miniAlphaBeta(depth - 1, alpha, beta);
         if (score > max) max = score;
+        if (max >= beta) return max;
+        if (max > alpha) alpha = max;
     }
     return max;
 }

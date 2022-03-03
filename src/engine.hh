@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
 #include <utility>
-#include <fstream>
+#include "game.hh"
+#include "minmax.hh"
+
 
 
 class Engine {
@@ -11,13 +13,16 @@ public:
 
     bool play();
 
-    int mini(int depth);
-    int miniAlphaBeta(int depth, int alpha, int beta);
+    double mini(int depth);
+    double miniAlphaBeta(int depth, int alpha, int beta);
 
-    int maxi(int depth);
-    int maxiAlphaBeta(int depth, int alpha, int beta);
+    double maxi(int depth);
+    double maxiAlphaBeta(int depth, int alpha, int beta);
 
-    int evaluate();
+
+    double evaluate();
+
+    double materialScore();
 
 
 private:
