@@ -15,7 +15,8 @@ bool Engine::play() {
     int bestMove = 0;
     double bestScore = -1;
     for (int i = 0; i < moves.size(); i++) {
-        double score = search(0, -1, 1);
+        double score = search(3, -1, 1);
+        std::cout << "Move: " << moves[i].first->getName() << " " << moves[i].second.getRow() << " " << moves[i].second.getCol() << " Score: " << score << std::endl;
         if (score > bestScore) {
             bestScore = score;
             bestMove = i;
@@ -23,21 +24,20 @@ bool Engine::play() {
     }
 
 
-
     // make best move
     Piece* piece = moves[bestMove].first;
     Tile tile = moves[bestMove].second;
     board->movePiece(piece->getRow(), piece->getCol(), tile.getRow(), tile.getCol());
 
-
-
     std::string s_move = "";
     Game::Instance()->setMessage(s_move);
     moves.clear();
+
     return 1;
 }
 
 bool Engine::generateMoves() {
+    moves.clear();
     std::vector<Piece*> pieces = board->getPieces(engineColor);
 
     for (auto* piece : pieces) {
@@ -75,11 +75,11 @@ double Engine::evaluate() {
 }
 
 int Engine::search(int depth, int alpha, int beta) {
-    moves.clear();
+
     if (depth == 0) return evaluate();
+    if (moves.size() == 0) return 0;  // stalemate or checkmate
 
     generateMoves();
-    if (moves.size() == 0) return 0; // stalemate or checkmate
 
 
     for (auto move : moves) {
@@ -92,6 +92,8 @@ int Engine::search(int depth, int alpha, int beta) {
 
     return alpha;
 }
+
+
 
 
 std::string Engine::movesToString(const std::vector<std::pair<Piece*, Tile>>&moves) {

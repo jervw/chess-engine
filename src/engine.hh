@@ -17,6 +17,8 @@ public:
     double evaluate();
     int search(int depth, int alpha, int beta);
 
+    int minimax(int depth);
+
     double materialScore();
 
 
