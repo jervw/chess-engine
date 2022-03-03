@@ -17,6 +17,7 @@ std::vector<Tile> Piece::getPossibleTiles(Board& board) {
 	return tiles;
 }
 
+
 int Piece::getRow() {
 	return row;
 }
@@ -25,8 +26,8 @@ int Piece::getCol() {
 	return col;
 }
 
-int Piece::getValue() {
-	return value;
+int Piece::getMatValue() {
+	return matValue;
 }
 
 Color Piece::getPlayer() {
@@ -39,6 +40,10 @@ void Piece::move(int r, int c) {
 	moved = true;
 }
 
+std::string Piece::getName() {
+	return name;
+}
+
 char Piece::getSymbol() {
 	return symbol;
 }
@@ -49,4 +54,19 @@ bool Piece::getMoved() {
 
 void Piece::setMoved(bool moved) {
 	this->moved = moved;
+}
+
+//debug functions
+
+std::string Piece::pieceInfo() {
+	std::string info = "";
+	info += "Player: ";
+	info += (player == 1 ? "White " : "Black ");
+	info += "\nType: " + name + "\n";
+	info += "Col: " + std::to_string(col) + "\n";
+	info += "Row: " + std::to_string(row) + "\n";
+	info += "MatValue: " + std::to_string(matValue) + "\n";
+	info += "TileValue " + std::to_string(getTileValue(row, col)) + "\n";
+	info += "Moved: " + std::to_string(moved) + "\n";
+	return info;
 }

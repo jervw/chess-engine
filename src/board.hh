@@ -3,6 +3,7 @@
 #include <vector>
 #include "pieces.hh"
 #include "move.hh"
+#include "tile.hh"
 
 class Piece;
 class Move;
@@ -13,8 +14,8 @@ public:
 	~Board();
 
 	std::vector<Piece*> getPieces(int player);
-
 	Piece* getPieceAt(int, int);
+
 	void addPiece(Piece*);
 	bool movePiece(int, int, int, int);
 	bool movesLeft(int);

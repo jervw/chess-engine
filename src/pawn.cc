@@ -2,7 +2,8 @@
 
 Pawn::Pawn(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
 	symbol = player == 1 ? 'P' : 'p';
-	value = 100;
+	name = "Pawn";
+	matValue = 100;
 	board->addPiece(this);
 }
 
@@ -59,3 +60,18 @@ bool Pawn::checkAttack(int r, int c) {
 		return true;
 	return false;
 }
+
+int Pawn::getTileValue(int row, int col) {
+	const int TILE_VALUES[8][8] = {
+	{ 0,  0,  0,  0,  0,  0,  0,  0 },
+	{ 50, 50, 50, 50, 50, 50, 50, 50 },
+	{ 10, 10, 20, 30, 30, 20, 10, 10 },
+	{  5,  5, 10, 25, 25, 10,  5,  5 },
+	{  0,  0,  0, 20, 20,  0,  0,  0 },
+	{  5, -5,-10,  0,  0,-10, -5,  5 },
+	{  5, 10, 10,-20,-20, 10, 10,  5 },
+	{  0,  0,  0,  0,  0,  0,  0,  0 } };
+
+	return TILE_VALUES[row - 1][col - 1];
+}
+

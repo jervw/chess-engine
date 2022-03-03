@@ -2,7 +2,8 @@
 
 Queen::Queen(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
 	symbol = player == 1 ? 'Q' : 'q';
-	value = 900;
+	name = "Queen";
+	matValue = 900;
 	board->addPiece(this);
 }
 
@@ -36,9 +37,8 @@ bool Queen::legalMove(int destRow, int destCol, Board& board) {
 		if (p) {
 			if (p->getPlayer() == player)
 				return false;
-			else {
+			else
 				return r == destRow && c == destCol;
-			}
 		}
 
 		if (r == destRow && c == destCol)
@@ -47,4 +47,18 @@ bool Queen::legalMove(int destRow, int destCol, Board& board) {
 		r += dirY;
 		c += dirX;
 	}
+}
+
+int Queen::getTileValue(int row, int col) {
+	const int TILE_VALUES[8][8] = {
+		{ -20,-10,-10, -5, -5,-10,-10,-20 },
+		{ -10,  0,  0,  0,  0,  0, -10 },
+		{ -10,  0,  5,  5,  5,  5, -10 },
+		{  -5,  0,  5,  5,  5,  5,  -5 },
+		{   0,  0,  5,  5,  5,  5,  -5 },
+		{ -10,  5,  5,  5,  5,  5, -10 },
+		{ -10,  0,  5,  0,  0,  0, -10 },
+		{ -20,-10,-10, -5, -5,-10,-10,-20 } };
+
+	return TILE_VALUES[row - 1][col - 1];
 }

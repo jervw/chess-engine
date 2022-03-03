@@ -1,5 +1,4 @@
 #include <iostream>
-#include <random>
 
 #include "game.hh"
 #include "engine.hh"
@@ -10,54 +9,22 @@ Engine::~Engine() = default;
 bool Engine::play() {
     std::vector<Piece*> pieces = board->getPieces(engineColor);
 
+    std::string pieceInfo = "";
     for (auto* piece : pieces) {
+        pieceInfo += piece->pieceInfo() + "\n";
         std::vector<Tile> possibleTiles = piece->getPossibleTiles(*board);
         for (auto tile : possibleTiles)
             moves.push_back(std::make_pair(piece, tile));
 
     }
 
-    /*     // temporary random engine
-        std::random_device rd;
-        std::mt19937 g(rd());
-        std::uniform_int_distribution<int> dist(0, moves.size() - 1);
 
-        int randomIndex = dist(g);
-        */
-
-
-
-
-        //bool success = board->movePiece(piece->getRow(), piece->getCol(), tile.getRow(), tile.getCol());
-    if (1) {
-        Game::Instance()->setMessage(movesToString(moves)); // set message
-        moves.clear();
-        return 1;
-    }
-
-    return 0;
+    Game::Instance()->setMessage(pieceInfo);
+    return 1;
 }
 
 
-int Engine::mini(int depth) {
-    if (depth == 0) return -evaluate();
-    int min = +1000000;
-    for (auto move : moves) {
-        int score = maxi(depth - 1);
-        if (score < min) min = score;
-    }
-    return min;
-}
 
-int Engine::maxi(int depth) {
-    if (depth == 0) return evaluate();
-    int max = -1000000;
-    for (auto move : moves) {
-        int score = mini(depth - 1);
-        if (score > max) max = score;
-    }
-    return max;
-}
 
 int Engine::miniAlphaBeta(int depth, int alpha, int beta) {
     if (depth == 0) return -evaluate();
@@ -90,10 +57,10 @@ int Engine::evaluate() {
     int blackPiecePoints = 0;
     int whitePiecePoints = 0;
     for (auto piece : board->getPieces(WHITE)) {
-        whitePiecePoints += piece->getValue();
+        whitePiecePoints += piece->getMatValue();
     }
     for (auto piece : board->getPieces(BLACK)) {
-        blackPiecePoints += piece->getValue();
+        blackPiecePoints += piece->getMatValue();
     }
 
     score = whitePiecePoints - blackPiecePoints;
@@ -101,24 +68,41 @@ int Engine::evaluate() {
     for (auto move : moves) {
         Piece* piece = move.first;
         Tile tile = move.second;
-        score += piece->getValue() * (tile.getRow() - piece->getRow());
+        score += piece->getMatValue() * (tile.getRow() - piece->getRow());
     }
-
-
-
-
 
     return score;
 }
-
-
 
 std::string Engine::movesToString(const std::vector<std::pair<Piece*, Tile>>&moves) {
     std::string str;
     for (auto move : moves) {
         str += Game::Instance()->columnToChar(move.first->getCol()) + std::to_string(move.first->getRow());
         str += Game::Instance()->columnToChar(move.second.getCol()) + std::to_string(move.second.getRow());
-        str += "  ";
     }
     return str;
+}
+
+
+
+// OLD MINIMAX
+
+int Engine::mini(int depth) {
+    if (depth == 0) return -evaluate();
+    int min = +1000000;
+    for (auto move : moves) {
+        int score = maxi(depth - 1);
+        if (score < min) min = score;
+    }
+    return min;
+}
+
+int Engine::maxi(int depth) {
+    if (depth == 0) return evaluate();
+    int max = -1000000;
+    for (auto move : moves) {
+        int score = mini(depth - 1);
+        if (score > max) max = score;
+    }
+    return max;
 }

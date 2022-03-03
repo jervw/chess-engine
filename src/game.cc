@@ -80,6 +80,7 @@ void Game::startGame() {
 					movesMade++;
 					currentMovePosition++;
 
+
 					// check stalemate or checkmate.
 					int otherPlayer = currentTurn == 1 ? 2 : 1;
 					bool movesAvailable = board->movesLeft(otherPlayer);
