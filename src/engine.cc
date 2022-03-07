@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+
 
 #include "game.hh"
 #include "engine.hh"
@@ -10,18 +12,19 @@ bool Engine::play() {
 
     generateMoves();
 
+    std::vector<std::pair<Piece*, Tile>> engineMoves = moves;
 
-    // search best move 
+    // find best move
     int bestMove = 0;
     double bestScore = -1;
-    for (int i = 0; i < moves.size(); i++) {
-        double score = search(3, -1, 1);
-        std::cout << "Move: " << moves[i].first->getName() << " " << moves[i].second.getRow() << " " << moves[i].second.getCol() << " Score: " << score << std::endl;
+    for (int i = 0; i < engineMoves.size(); i++) {
+        double score = evaluate();
         if (score > bestScore) {
             bestScore = score;
             bestMove = i;
         }
     }
+
 
 
     // make best move
@@ -46,6 +49,8 @@ bool Engine::generateMoves() {
             moves.push_back(std::make_pair(piece, tile));
     }
 
+
+    movesToString(moves);
     return moves.size() > 0;
 }
 
@@ -74,34 +79,42 @@ double Engine::evaluate() {
     return evaluation;
 }
 
-int Engine::search(int depth, int alpha, int beta) {
+// minimax algorithm
+int Engine::minimax(int depth) {
+    if (depth == 0)
+        return evaluate();
 
-    if (depth == 0) return evaluate();
-    if (moves.size() == 0) return 0;  // stalemate or checkmate
+    int bestScore = -1;
+    std::vector<Piece*> pieces = board->getPieces(engineColor);
 
-    generateMoves();
-
-
-    for (auto move : moves) {
-        board->movePiece(move.first->getRow(), move.first->getCol(), move.second.getRow(), move.second.getCol());
-        int evaluation = -search(depth - 1, -beta, -alpha);
-        board->undoMove();
-        if (evaluation >= beta) return beta; // beta cut-off
-        alpha = std::max(alpha, evaluation);
+    for (auto* piece : pieces) {
+        std::vector<Tile> possibleTiles = piece->getPossibleTiles(*board);
+        for (auto tile : possibleTiles) {
+            board->movePiece(piece->getRow(), piece->getCol(), tile.getRow(), tile.getCol());
+            int score = -minimax(depth - 1);
+            board->undoMove();
+            if (score > bestScore)
+                bestScore = score;
+        }
     }
 
-    return alpha;
+    return bestScore;
 }
 
 
+void Engine::movesToString(const std::vector<std::pair<Piece*, Tile>>&moves) {
+    // append to file
+    std::ofstream file;
+    file.open("moves.txt", std::ios::app);
 
-
-std::string Engine::movesToString(const std::vector<std::pair<Piece*, Tile>>&moves) {
     std::string str;
     for (auto move : moves) {
         str += move.first->colToChar() + std::to_string(move.first->getRow());
         str += move.second.colToChar() + std::to_string(move.second.getRow());
+        str += " ";
     }
-    return str;
+
+    file << str << std::endl;
+    file.close();
 }
 

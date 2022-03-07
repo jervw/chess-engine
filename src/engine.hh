@@ -2,7 +2,6 @@
 #include <vector>
 #include <utility>
 #include "game.hh"
-#include "minmax.hh"
 
 
 
@@ -15,7 +14,6 @@ public:
     bool generateMoves();
 
     double evaluate();
-    int search(int depth, int alpha, int beta);
 
     int minimax(int depth);
 
@@ -27,7 +25,7 @@ private:
     Color engineColor;
     std::vector<std::pair<Piece*, Tile>> moves;
 
-    std::string movesToString(const std::vector<std::pair<Piece*, Tile>>&);
+    void movesToString(const std::vector<std::pair<Piece*, Tile>>&);
 
 };
 
