@@ -1,25 +1,24 @@
 #pragma once
-
-#include "pieces.hh"
-
-class Piece;
+#include <sstream>
 
 class Move {
-private:
-	Piece* movedPiece;
-	Piece* attackedPiece;
-	Piece* promotedPiece; // Set only for promotion moves.
-	int srcRow, srcCol, dstRow, dstCol;
-	bool pieceHadMoved;
-
 public:
-	Move(Piece*, Piece*, Piece*, int, int, int, int);
-	Piece* getMovedPiece();
-	Piece* getAttackedPiece();
-	Piece* getPromotedPiece();
+	Move();
+	Move(int, int, int, int);
+
 	int getSrcRow();
 	int getSrcCol();
-	int getDstRow();
-	int getDstCol();
-	bool getPieceHadMoved();
+	int getDestCol();
+	int getDestRow();
+
+	std::string moveToString();
+
+	bool operator==(Move&);
+	bool operator>=(Move&);
+	bool operator<=(Move&);
+	friend std::ostream& operator<<(std::ostream&, Move&);
+
+private:
+	int srcCol, srcRow;
+	int destCol, destRow;
 };

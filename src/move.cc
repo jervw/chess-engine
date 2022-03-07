@@ -1,46 +1,22 @@
 #include "move.hh"
-#include <iostream>
 
-Move::Move(Piece* mvPiece, Piece* attPiece, Piece* promPiece, int sRow, int sCol, int dRow, int dCol) {
+Move::Move() {}
 
-	movedPiece = mvPiece;
-	attackedPiece = attPiece;
-	promotedPiece = promPiece;
-	srcRow = sRow;
-	srcCol = sCol;
-	dstRow = dRow;
-	dstCol = dCol;
-	pieceHadMoved = movedPiece->getMoved();
+Move::Move(int sC, int sR, int dC, int dR) : srcCol(sC), srcRow(sR), destCol(dC), destRow(dR) {}
+
+int Move::getSrcCol() { return srcCol; }
+int Move::getSrcRow() { return srcRow; }
+int Move::getDestCol() { return destCol; }
+int Move::getDestRow() { return destRow; }
+
+std::string Move::moveToString() {
+	std::stringstream toReturn;
+	toReturn << (char)(srcCol + 97) << (char)(srcRow + 49); // origin
+	toReturn << (char)(destCol + 97) << (char)(destRow + 49); // destination
+	return toReturn.str();
 }
 
-Piece* Move::getMovedPiece() {
-	return movedPiece;
-}
-
-Piece* Move::getAttackedPiece() {
-	return attackedPiece;
-}
-
-Piece* Move::getPromotedPiece() {
-	return promotedPiece;
-}
-
-int Move::getSrcRow() {
-	return srcRow;
-}
-
-int Move::getSrcCol() {
-	return srcCol;
-}
-
-int Move::getDstRow() {
-	return dstRow;
-}
-
-int Move::getDstCol() {
-	return dstCol;
-}
-
-bool Move::getPieceHadMoved() {
-	return pieceHadMoved;
+std::ostream& operator<<(std::ostream& out, Move& m) {
+	out << m.moveToString();
+	return out;
 }

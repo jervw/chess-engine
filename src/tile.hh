@@ -1,18 +1,25 @@
 #pragma once
-#include <string>
+#include <iostream>
+#include "pieces.hh"
+#include <memory>
+
 
 class Tile {
 
 public:
 	Tile();
-	Tile(int, int);
-	bool operator==(const Tile&) const;
+	Tile(Piece* p);
+	Tile(const Tile& t);
+	~Tile();
 
-	int getRow() const;
-	int getCol() const;
-	char colToChar() const;
-	std::string toString() const;
+	void reset();
+	Piece& getPiece();
+
+	Tile& operator=(const Tile&);
+	Tile& operator=(Piece*);
+	operator bool() const;
+	friend std::ostream& operator<<(std::ostream&, Tile&);
 
 private:
-	int row, col;
+	std::shared_ptr<Piece> occupant; // occupying piece
 };

@@ -1,32 +1,20 @@
 #pragma once
-#include <vector>
-#include <utility>
-#include "game.hh"
+#include "player.hh"
+#include <limits>
+#include <algorithm>
 
+class Engine : public Player {
 
-
-class Engine {
 public:
-    Engine(Color, Board*);
-    ~Engine();
-
-    bool play();
-    bool generateMoves();
-
-    double evaluate();
-
-    int minimax(int depth);
-
-    double materialScore();
-
+    Engine(bool, int);
+    Move promptMove();
 
 private:
-    Board* board;
-    Color engineColor;
-    std::vector<std::pair<Piece*, Tile>> moves;
+    int depth; // depth for minimax algorithm
+    std::vector<std::string> buffer; // move buffer
 
-    void movesToString(const std::vector<std::pair<Piece*, Tile>>&);
-
+    Move search(int, int);
+    int negamax(Board*, int, int, int, bool);
+    int evaluate(Board*);
+    void printData(int, int);
 };
-
-

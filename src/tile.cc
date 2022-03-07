@@ -1,28 +1,32 @@
 #include "tile.hh"
 
-Tile::Tile() {
-	row = col = 0;
+Tile::Tile() : occupant(nullptr) {}
+Tile::Tile(Piece* p) : occupant(p) {}
+Tile::~Tile() { occupant.reset(); }
+Tile::Tile(const Tile& t) : occupant(t ? t.occupant->clone() : std::shared_ptr<Piece>()) {}
+
+void Tile::reset() {
+	occupant.reset();
 }
 
-Tile::Tile(int r, int c) : row(r), col(c) {}
-
-bool Tile::operator==(const Tile& other) const {
-	return row == other.row && col == other.col;
+Piece& Tile::getPiece() {
+	return *occupant;
 }
 
-int Tile::getRow() const {
-	return row;
+Tile& Tile::operator=(const Tile& t) {
+	Tile temp(t);
+	occupant = temp.occupant;
+	return *this;
 }
 
-int Tile::getCol() const {
-	return col;
+Tile& Tile::operator=(Piece* p) {
+	occupant.reset(p);
+	return *this;
 }
 
-char Tile::colToChar() const {
-	const std::string cols = "abcdefgh";
-	return cols[col - 1];
-}
+Tile::operator bool() const { return occupant.get() != NULL; }
 
-std::string Tile::toString() const {
-	return colToChar() + std::to_string(row);
+std::ostream& operator<<(std::ostream& out, Tile& t) {
+	out << (t ? t.occupant.get()->getType() : ' ');
+	return out;
 }
