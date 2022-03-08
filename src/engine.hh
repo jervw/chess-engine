@@ -1,20 +1,21 @@
 #pragma once
 #include "player.hh"
-#include <limits>
+#include <limits.h>
 #include <algorithm>
+#include <vector>
+#include <string>
 
 class Engine : public Player {
 
 public:
     Engine(bool, int);
-    Move promptMove();
+    Move play();
 
 private:
-    int depth; // depth for minimax algorithm
+    int depth;
     std::vector<std::string> buffer; // move buffer
 
     Move search(int, int);
     int negamax(Board*, int, int, int, bool);
     int evaluate(Board*);
-    void printData(int, int);
 };

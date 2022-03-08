@@ -24,7 +24,7 @@ public:
 	void goForward();
 	void undoMove();
 	void initBoard();
-	void printBoard(int, int, const std::vector<Tile>&);
+	void printBoard();
 	void clear();
 
 private:

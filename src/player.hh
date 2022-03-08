@@ -3,7 +3,7 @@
 
 class Player {
 public:
-    virtual Move promptMove() = 0;
+    virtual Move getMove() = 0;
     bool getColor();
     void setBoard(Board*);
 
