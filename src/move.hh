@@ -2,16 +2,20 @@
 #include <sstream>
 
 class Move {
+
 public:
 	Move();
-	Move(int, int, int, int);
+	Move(unsigned, unsigned, unsigned, unsigned);
 
-	int getSrcRow();
-	int getSrcCol();
-	int getDestCol();
-	int getDestRow();
+	std::string stateMove();
 
-	std::string moveToString();
+	unsigned getSrcCol();
+	unsigned getSrcRow();
+	unsigned getDestCol();
+	unsigned getDestRow();
+
+	std::pair <unsigned, unsigned> getSrc();
+	std::pair <unsigned, unsigned> getDest();
 
 	bool operator==(Move&);
 	bool operator>=(Move&);
@@ -19,6 +23,6 @@ public:
 	friend std::ostream& operator<<(std::ostream&, Move&);
 
 private:
-	int srcCol, srcRow;
-	int destCol, destRow;
+	unsigned srcCol, srcRow; // origin of move
+	unsigned destCol, destRow; // destination of move
 };

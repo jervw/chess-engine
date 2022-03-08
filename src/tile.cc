@@ -3,7 +3,7 @@
 Tile::Tile() : occupant(nullptr) {}
 Tile::Tile(Piece* p) : occupant(p) {}
 Tile::~Tile() { occupant.reset(); }
-//Tile::Tile(const Tile& t) : occupant(t ? t.occupant->clone() : std::shared_ptr<Piece>()) {}
+Tile::Tile(const Tile& t) : occupant(t ? t.occupant->clone() : std::shared_ptr<Piece>()) {}
 
 void Tile::reset() {
 	occupant.reset();
@@ -25,9 +25,8 @@ Tile& Tile::operator=(Piece* p) {
 }
 
 Tile::operator bool() const { return occupant.get() != NULL; }
-/*
+
 std::ostream& operator<<(std::ostream& out, Tile& t) {
 	out << (t ? t.occupant.get()->getType() : ' ');
 	return out;
 }
- */

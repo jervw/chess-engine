@@ -1,62 +1,40 @@
-#include "pieces.hh"
+#include "bishop.hh"
 
-Bishop::Bishop(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
-	symbol = (player == WHITE) ? 'B' : 'b';
-	name = "Bishop";
-	matValue = 330;
-	board->addPiece(this);
+Bishop::Bishop(bool color) : Piece(color, Params::BISHOP, 'B') {}
+
+std::shared_ptr<Piece> Bishop::clone() const {
+	return std::shared_ptr<Piece>(new Bishop(*this));
 }
 
-bool Bishop::possibleMove(int destRow, int destCol) {
+std::vector<Move> Bishop::getMoves(Board* board, unsigned col, unsigned row) {
+	std::vector<Move> moveList;
+	for (unsigned j = 0; j < MOVE_NUM; j++) {
+		int x = col, y = row;
 
-	// check for same tile.
-	if (row == destRow && col == destCol)
-		return false;
+		for (unsigned i = MIN_MOVE; i < MAX_MOVE; i++, x = col, y = row) {
+			switch (j) {
+			case 0: x += i; y += i; break; // north-east
+			case 1: x += i; y -= i; break; // south-east
+			case 2: x -= i; y -= i; break; // south-west
+			case 3: x -= i; y += i; break; // north-west
+			}
 
-	if (abs(row - destRow) == abs(col - destCol))
-		return true;
+			// check if valid move
+			if (checkInBounds(x, y)) {
+				Tile possibleMove = (*board)(x, y);
+				if (possibleMove) { // check for own piece
+					if (possibleMove.getPiece().getColor() != color)
+						moveList.push_back(Move(col, row, x, y)); // capture
 
-	return false;
-}
+					break;
+				}
+				else // not occupied
+					moveList.push_back(Move(col, row, x, y));
 
-bool Bishop::legalMove(int destRow, int destCol, Board& board) {
-
-	// movement dir
-	int dirX = destCol - col > 0 ? 1 : (destCol - col == 0 ? 0 : -1);
-	int dirY = destRow - row > 0 ? 1 : (destRow - row == 0 ? 0 : -1);
-
-	int r = row + dirY;
-	int c = col + dirX;
-
-	while (1) {
-		Piece* p = board.getPieceAt(r, c);
-
-		if (p) {
-			if (p->getPlayer() == player)
-				return false;
-			else
-				return r == destRow && c == destCol;
+			}
+			// out of bounds
+			else break;
 		}
-
-		if (r == destRow && c == destCol)
-			return true;
-
-		r += dirY;
-		c += dirX;
 	}
-}
-
-int Bishop::getTileValue(int row, int col) {
-	const int TILE_VALUES[8][8] =
-	{
-	{-20,-10,-10,-10,-10,-10,-10,-20},
-	{-10,  0,  0,  0,  0,  0,  0,-10},
-	{-10,  0,  5, 10, 10,  5,  0,-10},
-	{-10,  5,  5, 10, 10,  5,  5,-10},
-	{-10,  0, 10, 10, 10, 10,  0,-10},
-	{-10, 10, 10, 10, 10, 10, 10,-10},
-	{-10,  5,  0,  0,  0,  0,  5,-10},
-	{-20,-10,-10,-10,-10,-10,-10,-20}, };
-
-	return TILE_VALUES[row - 1][col - 1];
+	return moveList;
 }

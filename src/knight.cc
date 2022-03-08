@@ -1,41 +1,38 @@
-#include "pieces.hh"
+#include "knight.hh"
 
-Knight::Knight(int row, int col, Color player, Board* board) : Piece(row, col, player, board) {
-	symbol = player == 1 ? 'N' : 'n';
-	name = "Knight";
-	matValue = 320;
-	board->addPiece(this);
+Knight::Knight(bool color) : Piece(color, Params::KNIGHT, 'N') {}
+
+std::shared_ptr<Piece> Knight::clone() const {
+	return std::shared_ptr<Piece>(new Knight(*this));
 }
 
-bool Knight::possibleMove(int destRow, int destCol) {
+std::vector<Move> Knight::getMoves(Board* board, unsigned col, unsigned row) {
+	std::vector<Move> moveList;
+	for (unsigned i = 0; i < MOVE_NUM; i++) {
+		int x = col, y = row;
 
-	if (abs(row - destRow) == 2 && abs(col - destCol) == 1)
-		return true;
+		switch (i) {
+		case 0: x += MIN_MOVE; y += MAX_MOVE; break;
+		case 1: x -= MIN_MOVE; y += MAX_MOVE; break;
+		case 2: x += MAX_MOVE; y += MIN_MOVE; break;
+		case 3: x += MAX_MOVE; y -= MIN_MOVE; break;
+		case 4: x -= MAX_MOVE; y += MIN_MOVE; break;
+		case 5: x -= MAX_MOVE; y -= MIN_MOVE; break;
+		case 6: x += MIN_MOVE; y -= MAX_MOVE; break;
+		case 7: x -= MIN_MOVE; y -= MAX_MOVE; break;
+		}
 
-	if (abs(row - destRow) == 1 && abs(col - destCol) == 2)
-		return true;
+		// check if valid move
+		if (checkInBounds(x, y)) {
+			Tile possibleMove = (*board)(x, y);
+			if (possibleMove) { // check for own piece
+				if (possibleMove.getPiece().getColor() != color)
+					moveList.push_back(Move(col, row, x, y)); // capture
+			}
+			else // not occupied
+				moveList.push_back(Move(col, row, x, y));
 
-
-	return false;
-}
-
-bool Knight::legalMove(int destRow, int destCol, Board& board) {
-	Piece* p = board.getPieceAt(destRow, destCol);
-	if (p == NULL || p->getPlayer() != player)
-		return true;
-	return false;
-}
-
-int Knight::getTileValue(int row, int col) {
-	const int TILE_VALUES[8][8] = {
-	{-50,-40,-30,-30,-30,-30,-40,-50},
-	{-40,-20,  0,  0,  0,  0,-20,-40},
-	{-30,  0, 10, 15, 15, 10,  0,-30},
-	{-30,  5, 15, 20, 20, 15,  5,-30},
-	{-30,  0, 15, 20, 20, 15,  0,-30},
-	{-30,  5, 10, 15, 15, 10,  5,-30},
-	{-40,-20,  0,  5,  5,  0,-20,-40},
-	{-50,-40,-30,-30,-30,-30,-40,-50} };
-
-	return TILE_VALUES[row - 1][col - 1];
+		}
+	}
+	return moveList;
 }

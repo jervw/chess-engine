@@ -1,39 +1,33 @@
 #pragma once
-
-#include <vector>
-#include "pieces.hh"
-#include "move.hh"
 #include "tile.hh"
+#include "knight.hh"
+#include "bishop.hh"
+#include "rook.hh"
+#include "queen.hh"
+#include "king.hh"
+#include "pawn.hh"
+#include <fstream>
+#include <algorithm>
 
-class Piece;
-class Move;
+#define BOARD_S 8
+
+enum Column { A, B, C, D, E, F, G, H };
 
 class Board {
+
 public:
 	Board();
-	~Board();
 
-	std::vector<Piece*> getPieces(int player = 0) const;
-	Piece* getPieceAt(int, int);
+	void printBoard(int = -1, int = -1, std::vector<Move> = std::vector<Move>());
+	void movePiece(Move);
 
-	void addPiece(Piece*);
-	bool movePiece(int, int, int, int);
-	bool movesLeft(int);
-	bool isKingSafe(int);
-	void goBack();
-	void goForward();
-	void undoMove();
-	void initBoard();
-	void printBoard();
-	void clear();
+	// operator overloads for easy tile access
+	Tile& operator()(int, int);
+	Tile const& operator()(int, int) const;
 
 private:
-	Piece** pieces; // 64 pieces
-	Piece* wKing, * bKing; // save pointers to kings
-	std::vector<Move> movesMade; // previous moves
-	int currentMove; // current move
+	Tile tiles[BOARD_S][BOARD_S];
+	const static bool WHITE = true, BLACK = false;
 
-	bool isAttacked(int, int, int);
-	int convertToIndex(int, int);
+	std::vector<Move> getAllNonKingMoves(bool);
 };
-

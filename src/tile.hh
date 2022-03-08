@@ -1,8 +1,6 @@
 #pragma once
 #include <iostream>
-#include "pieces.hh"
-#include <memory>
-
+#include "piece.hh"
 
 class Tile {
 
@@ -18,7 +16,7 @@ public:
 	Tile& operator=(const Tile&);
 	Tile& operator=(Piece*);
 	operator bool() const;
-	//friend std::ostream& operator<<(std::ostream&, Tile&);
+	friend std::ostream& operator<<(std::ostream&, Tile&);
 
 private:
 	std::shared_ptr<Piece> occupant; // occupying piece

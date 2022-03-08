@@ -1,4 +1,3 @@
-
 #include "engine.hh"
 
 Engine::Engine(bool color, int depth) : depth(depth) {

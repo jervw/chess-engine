@@ -1,33 +1,24 @@
-#pragma once
-
-#include <vector>
-#include <string>
-#include "board.hh"
+#include "player.hh"
 
 class Game {
+
 public:
-	Game();
+	Game(Board*, Player*, Player*);
 	~Game();
-
-	static Game* Instance();
-
-	void setMessage(std::string msg);
-	void startGame();
-	int getPlayerTurn();
+	void play();
 
 private:
-	static Game* instance;
-	std::string message;
 	Board* board;
-	int currentTurn;
-	int currentRow, currentCol;
-	int selectedRow, selectedCol;
+	Player* white; Player* black;
+	int gameState; // current game state
+	int moveCount = 1; // game move counter
 
-	void moveUp();
-	void moveDown();
-	void moveLeft();
-	void moveRight();
-	void switchPlayer();
-	void drawBoard(int, int, std::vector<Tile>&);
+	void whiteMove();
+	void blackMove();
+	void makeMove(Move);
+	Board* getBoard();
+
+	int getGameState();
+
+	void setGameState(int);
 };
-
