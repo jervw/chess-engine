@@ -214,10 +214,26 @@ int Board::getAllPawnValues(bool color) {
 	return count;
 }
 
+// get all piece square values
+int Board::getAllPieceSquareValues(bool color) {
+	int count = 0;
+	for (unsigned i = 0; i < BOARD_S; i++)
+		for (unsigned j = 0; j < BOARD_S; j++)
+			if ((*this)(j, i)) {
+				// if piece exists and right color
+				if ((*this)(j, i).getPiece().getColor() == color)
+					count += (*this)(j, i).getPiece().getSquareValue(j, i);
+				else
+					count -= (*this)(j, i).getPiece().getSquareValue(j, i);
+			}
+
+	return count;
+}
+
 
 void Board::printBoard(int selectedCol, int selectedRow, std::vector<std::pair<int, int>> moves) {
 	system("stty cooked");
-	std::cout << "\033c";
+	//std::cout << "\033c";
 
 	const std::string WHITE = "\033[30;47m";
 	const std::string BLACK = "\033[37;40m";

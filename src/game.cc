@@ -20,10 +20,27 @@ void Game::play() {
 	while (1) {
 		getBoard()->printBoard();
 
+		// check game states for white 
+		if (getBoard()->determineCheckmate(white->getColor())) { setGameState(3); break; }
+		if (getBoard()->determineDraw()) { setGameState(2); break; }
+		if (getBoard()->determineStalemate(white->getColor())) { setGameState(1); break; }
+
+		if (getBoard()->determineCheck(white->getColor()))
+			std::cout << "\nWhite is in check!\n";
+
 		whiteMove(); // else white can move
 		getBoard()->printBoard();
 
+		// check game states for black
+		if (getBoard()->determineCheckmate(black->getColor())) { setGameState(4); break; }
+		if (getBoard()->determineStalemate(black->getColor())) { setGameState(1); break; }
+		if (getBoard()->determineDraw()) { setGameState(2); break; }
+
+		if (getBoard()->determineCheck(black->getColor()))
+			std::cout << "\nBlack is in check!\n";
+
 		blackMove(); // else black can move
+
 	}
 	// OUT of the game loop
 
@@ -38,13 +55,13 @@ void Game::play() {
 // white move
 void Game::whiteMove() {
 	Move m = white->getMove();
-	makeMove(m); // make the move
+	makeMove(m);
 }
 
-// black move function
+// black move
 void Game::blackMove() {
 	Move m = black->getMove();
-	makeMove(m); // make the move
+	makeMove(m);
 }
 
 void Game::makeMove(Move move) {

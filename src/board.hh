@@ -32,6 +32,7 @@ public:
 	int getAllPieceValues(bool);
 	int getAllMobilityValues(bool);
 	int getAllPawnValues(bool);
+	int getAllPieceSquareValues(bool);
 
 	// operator overloads for easy tile access
 	Tile& operator()(int, int);

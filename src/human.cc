@@ -40,9 +40,13 @@ Move Human::getMove() {
                 for (auto& m : currentMoves)
                     movePairs.push_back(std::make_pair(m.getDestCol(), m.getDestRow()));
 
+                std::cout << selectedPiece->getSquareValue(currentCol, currentRow) << std::endl;
+                std::cout << currentCol << " " << currentRow << std::endl;
             }
 
             if (!selectedPiece || selectedPiece->getColor() != getColor()) {
+
+
                 for (auto& m : movePairs)
                     if (m.first == currentCol && m.second == currentRow) {
                         system("stty cooked");
@@ -50,7 +54,6 @@ Move Human::getMove() {
                         return Move(selectedCol, selectedRow, m.first, m.second);
                     }
             }
-
 
             continue;
         }

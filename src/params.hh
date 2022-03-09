@@ -15,6 +15,8 @@ namespace Params {
 		{  5, 10, 10,-20,-20, 10, 10,  5 },
 		{  0,  0,  0,  0,  0,  0,  0,  0 }
 	};
+	// 0, 10, -5, 0,  5, 10, 50,  5
+
 	const int TILE_KNIGHT[8][8] = {
 		{ -50,-40,-30,-30,-30,-30,-40,-50 },
 		{ -40,-20,  0,  0,  0,  0,-20,-40 },
@@ -93,6 +95,7 @@ namespace Params {
 	const static int C1 = 12; // for material value
 	const static int C2 = 1; // for mobility value
 	const static int C3 = 3; // for pawn rank value
+	const static int C4 = 3; // for pawn tile value
 
 	// Game states
 	const static int STALEMATE = 0;

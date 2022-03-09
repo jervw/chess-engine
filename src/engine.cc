@@ -124,15 +124,12 @@ int Engine::evaluate(Board* board) {
     int value = board->getAllPieceValues(getColor()); // material value
     int mobility = board->getAllMobilityValues(getColor()); // board control
     int pawns = board->getAllPawnValues(getColor()); // pawn control
-
-    // get piece square tables
-
-
+    int squareValues = board->getAllPieceSquareValues(getColor()); // tile control
 
 
     // weigthed sum
-    int c1 = Params::C1, c2 = Params::C2, c3 = Params::C3;
-    return (c1 * value) + (c2 * mobility) + (c3 * pawns);
+    int c1 = Params::C1, c2 = Params::C2, c3 = Params::C3, c4 = Params::C4;
+    return (c1 * value) + (c2 * mobility) + (c3 * pawns) + (c4 * squareValues);
 }
 
 std::string Engine::moveData(Move m, int score, unsigned moves) {

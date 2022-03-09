@@ -13,6 +13,7 @@ public:
 
 	virtual std::vector<Move> getMoves(Board*, unsigned, unsigned) = 0;
 
+	int getSquareValue(unsigned, unsigned);
 	bool getMoved();
 	bool getColor();
 	unsigned getValue();
