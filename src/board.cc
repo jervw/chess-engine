@@ -233,7 +233,7 @@ int Board::getAllPieceSquareValues(bool color) {
 
 void Board::printBoard(int selectedCol, int selectedRow, std::vector<std::pair<int, int>> moves) {
 	system("stty cooked");
-	//std::cout << "\033c";
+	std::cout << "\033c";
 
 	const std::string WHITE = "\033[30;47m";
 	const std::string BLACK = "\033[37;40m";

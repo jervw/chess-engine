@@ -12,12 +12,13 @@ int main(int argc, char** argv) {
     if (argc > 2) {
         int depth = atoi(argv[2]);
         if (strcmp(argv[1], "--white") == 0) {
-            white = new Human(WHITE);
-            black = new Engine(BLACK, depth);
+            white = new Human(WHITE, 0);
+            black = new Human(BLACK, 0);
+            //black = new Engine(BLACK, depth);
         }
         else if (strcmp(argv[1], "--black") == 0) {
             white = new Engine(WHITE, depth);
-            black = new Human(BLACK);
+            black = new Human(BLACK, 0);
         }
         else if (strcmp(argv[1], "--engine") == 0) {
             white = new Engine(WHITE, depth);

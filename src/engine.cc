@@ -45,13 +45,6 @@ Move Engine::search(int alpha, int beta) {
         }
     }
 
-    // if no moves, forfeit game
-    if (bestMoves.size() == 0) {
-        std::cout << (getColor() ? "White" : "Black");
-        std::cout << " has forfeited the game.\n\n";
-        exit(0);
-    }
-
     // if equal best moves, choose randomly
     Move theBestMove = bestMoves[rand() % bestMoves.size()];
     buffer.push_back(theBestMove.stateMove()); // add best to buffer
