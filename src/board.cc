@@ -75,10 +75,147 @@ void Board::movePiece(Move m) {
 
 	// destroy original tile
 	(*this)(m.getSrcCol(), m.getSrcRow()).reset();
+
+	// store the move last made
+	lastMove = &m;
+}
+
+bool Board::determineCheckmate(bool color) {
+	if (determineCheck(color)) {
+		std::vector<Move> moveList = getAllMoves(!color);
+
+		// find all next-step board states
+		for (int i = 0; i < moveList.size(); i++) {
+			Board copy(*this);
+			copy.movePiece(moveList[i]);
+
+			// if escape is possible, return false
+			if (!copy.determineCheck(color)) return false;
+		}
+		return true;
+	}
+
+	return false; // no check found
+}
+
+bool Board::determineCheck(bool color) {
+	// opponent moves
+	std::vector<Move> moveList = getAllNonKingMoves(color);
+	for (int i = 0; i < moveList.size(); i++) {
+		Tile t = (*this)(moveList[i].getDestCol(), moveList[i].getDestRow());
+		if (t && t.getPiece().getType() == ((color) ? 'K' : 'k')) return true;
+	}
+
+	return false; // not check
+}
+
+bool Board::determineStalemate(bool color) {
+	// if check cannot be stalemate
+	if (determineCheck(color)) return false;
+	// if no possible moves, stalemate
+	if (getAllMoves(!color).size() == 0) return true;
+
+	return false; // else must be stalemate
+}
+
+bool Board::determineDraw() {
+	// determine if two kings are only pieces left
+	int boardValue = 0;
+	for (unsigned i = 0; i < BOARD_S; i++)
+		for (unsigned j = 0; j < BOARD_S; j++)
+			if ((*this)(j, i))
+				boardValue += (*this)(j, i).getPiece().getValue();
+
+	// if board value is equal to two kings, draw
+	return (boardValue == 2 * Params::KING);
+}
+
+std::vector<Move> Board::getAllMoves(bool color) {
+	std::vector<Move> moveList;
+
+	for (unsigned i = 0; i < BOARD_S; i++) {
+		for (unsigned j = 0; j < BOARD_S; j++) {
+			if (!(*this)(j, i) || (*this)(j, i).getPiece().getColor() == color) continue;
+
+			// get possible moves for each piece
+			std::vector<Move> m = (*this)(j, i).getPiece().getMoves(this, j, i);
+			for (unsigned k = 0; k < m.size(); k++)
+				moveList.push_back(m[k]);
+		}
+	}
+	return moveList;
+}
+
+// returns all moves for a player except for king
+std::vector<Move> Board::getAllNonKingMoves(bool color) {
+	std::vector<Move> moveList;
+	for (unsigned i = 0; i < BOARD_S; i++)
+		for (unsigned j = 0; j < BOARD_S; j++) {
+			if (!(*this)(j, i) || (*this)(j, i).getPiece().getColor() == color) continue;
+
+			// ignore kings
+			if ((*this)(j, i).getPiece().getType() == ((color) ? 'k' : 'K')) continue;
+
+			// get possible moves for each piece
+			std::vector<Move> m = (*this)(j, i).getPiece().getMoves(this, j, i);
+			for (unsigned k = 0; k < m.size(); k++)
+				moveList.push_back(m[k]);
+		}
+
+
+	return moveList;
+}
+
+int Board::getAllPieceValues(bool color) {
+	int count = 0;
+	for (unsigned i = 0; i < BOARD_S; i++)
+		for (unsigned j = 0; j < BOARD_S; j++)
+			if ((*this)(j, i)) {
+				// if piece exists and right color
+				if ((*this)(j, i).getPiece().getColor() == color)
+					count += (*this)(j, i).getPiece().getValue();
+				else
+					count -= (*this)(j, i).getPiece().getValue();
+			}
+
+	return count;
+}
+
+int Board::getAllMobilityValues(bool color) {
+	int count = 0;
+	for (unsigned i = 0; i < BOARD_S; i++)
+		for (unsigned j = 0; j < BOARD_S; j++) {
+			if (!(*this)(j, i)) continue; // skip empty tiles
+
+			// if piece exists and right color
+			if ((*this)(j, i).getPiece().getColor() == color)
+				count += (*this)(j, i).getPiece().getMoves(this, j, i).size();
+			else
+				count -= (*this)(j, i).getPiece().getMoves(this, j, i).size();
+		}
+
+	return count;
 }
 
 
-void Board::printBoard(int selectedCol, int selectedRow, std::vector<Move> moveList) {
+int Board::getAllPawnValues(bool color) {
+	int count = 0;
+	for (unsigned i = 0; i < BOARD_S; i++)
+		for (unsigned j = 0; j < BOARD_S; j++)
+			if ((*this)(j, i))
+				if ((*this)(j, i).getPiece().getValue() == Params::PAWN)
+				{
+					if ((*this)(j, i).getPiece().getColor() == color)
+						count += ((color == WHITE) ? i - 1 : 6 - i); // white pawns
+					else
+						count -= ((color == WHITE) ? 6 - i : i - 1); // black pawns
+				}
+
+	return count;
+}
+
+
+void Board::printBoard(int selectedCol, int selectedRow, std::vector<std::pair<int, int>> moves) {
 	system("stty cooked");
 	std::cout << "\033c";
 
@@ -96,6 +233,8 @@ void Board::printBoard(int selectedCol, int selectedRow, std::vector<Move> moveL
 		for (int j = 0; j < BOARD_S; j++) {
 			if (selectedCol == j && selectedRow == i - 1)
 				color = BLUE;
+			else if (std::find(moves.begin(), moves.end(), std::make_pair(j, i - 1)) != moves.end())
+				color = GREEN;
 			else
 				color = (i % 2 == 0) ? ((j % 2 == 0) ? WHITE : BLACK) : ((j % 2 == 0) ? BLACK : WHITE);
 
@@ -108,9 +247,14 @@ void Board::printBoard(int selectedCol, int selectedRow, std::vector<Move> moveL
 	// column labels
 	for (int i = 0; i < BOARD_S; i++)
 		std::cout << (char)(97 + i) << "  ";
-	std::cout << "\n";
 
+	// message
+	std::cout << "\n" << message << "\n";
 	system("stty raw");
+}
+
+void Board::setMessage(std::string message) {
+	this->message = message;
 }
 
 Tile& Board::operator()(int c, int r) {

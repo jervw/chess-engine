@@ -19,8 +19,19 @@ class Board {
 public:
 	Board();
 
-	void printBoard(int = -1, int = -1, std::vector<Move> = std::vector<Move>());
+	void printBoard(int = -1, int = -1, std::vector<std::pair<int, int>> = {});
+	void setMessage(std::string);
 	void movePiece(Move);
+	std::vector<Move> getAllMoves(bool);
+
+	bool determineCheckmate(bool);
+	bool determineStalemate(bool);
+	bool determineCheck(bool);
+	bool determineDraw();
+
+	int getAllPieceValues(bool);
+	int getAllMobilityValues(bool);
+	int getAllPawnValues(bool);
 
 	// operator overloads for easy tile access
 	Tile& operator()(int, int);
@@ -28,7 +39,11 @@ public:
 
 private:
 	Tile tiles[BOARD_S][BOARD_S];
+	Move* lastMove = nullptr;
 	const static bool WHITE = true, BLACK = false;
+
+	std::string message = ""; // message to be displayed
+
 
 	std::vector<Move> getAllNonKingMoves(bool);
 };
