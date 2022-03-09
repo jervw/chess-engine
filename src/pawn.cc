@@ -40,6 +40,25 @@ std::vector<Move> Pawn::getMoves(Board* board, unsigned col, unsigned row) {
 			else if (!(i == 2 || i == 3)) // not occupied
 				moveList.push_back(Move(col, row, x, y));
 		}
+
+		// En Passant
+		if (i == 1 && !getMoved() && !(*board)(col, row)) {
+			// check if there is a pawn to the left
+			if (col > 0 && (*board)(col - 1, row)) {
+				if ((*board)(col - 1, row).getPiece().getValue() == Params::PAWN) {
+					if ((*board)(col - 1, row).getPiece().getColor() != color)
+						moveList.push_back(Move(col, row, col - 1, row)); // capture
+				}
+			}
+			// check if there is a pawn to the right
+			if (col < BOARD_S - 1 && (*board)(col + 1, row)) {
+				if ((*board)(col + 1, row).getPiece().getValue() == Params::PAWN) {
+					if ((*board)(col + 1, row).getPiece().getColor() != color)
+						moveList.push_back(Move(col, row, col + 1, row)); // capture
+				}
+			}
+
+		}
 	}
 	return moveList;
 }

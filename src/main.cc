@@ -13,7 +13,8 @@ int main(int argc, char** argv) {
         int depth = atoi(argv[2]);
         if (strcmp(argv[1], "--white") == 0) {
             white = new Human(WHITE);
-            black = new Engine(BLACK, depth);
+            black = new Human(BLACK);
+            //black = new Engine(BLACK, depth);
         }
         else if (strcmp(argv[1], "--black") == 0) {
             white = new Engine(WHITE, depth);
