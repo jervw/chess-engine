@@ -5,10 +5,11 @@ Move::Move() {}
 Move::Move(unsigned sC, unsigned sR, unsigned dC, unsigned dR) : srcCol(sC), srcRow(sR), destCol(dC), destRow(dR) {}
 
 std::string Move::stateMove() {
-	std::stringstream toReturn;
-	toReturn << (char)(srcCol + 97) << (char)(srcRow + 49); // origin
-	toReturn << (char)(destCol + 97) << (char)(destRow + 49); // destination
-	return toReturn.str();
+	std::stringstream s;
+	s << (char)(srcCol + 97) << (char)(srcRow + 49); // origin
+	s << (char)(destCol + 97) << (char)(destRow + 49); // destination
+	s << std::endl;
+	return s.str();
 }
 
 unsigned Move::getSrcCol() { return srcCol; }

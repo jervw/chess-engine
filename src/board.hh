@@ -1,5 +1,6 @@
 #pragma once
 #include "tile.hh"
+#include "params.hh"
 #include "knight.hh"
 #include "bishop.hh"
 #include "rook.hh"
